@@ -1,0 +1,13 @@
+﻿<Window x:Class="MyApp.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Аутентификация" Height="300" Width="400">
+    <Grid>
+        <TextBlock Text="Email:" HorizontalAlignment="Left" Margin="20,40,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="EmailTextBox" HorizontalAlignment="Left" Margin="80,40,0,0" VerticalAlignment="Top" Width="200"/>
+        <TextBlock Text="Пароль:" HorizontalAlignment="Left" Margin="20,80,0,0" VerticalAlignment="Top"/>
+        <PasswordBox x:Name="PasswordBox" HorizontalAlignment="Left" Margin="80,80,0,0" VerticalAlignment="Top" Width="200"/>
+        <Button Content="Войти" HorizontalAlignment="Left" Margin="80,140,0,0" VerticalAlignment="Top" Width="100" Click="LoginButton_Click"/>
+        <Button Content="Зарегистрироваться" HorizontalAlignment="Left" Margin="200,140,0,0" VerticalAlignment="Top" Width="150" Click="RegisterButton_Click"/>
+    </Grid>
+</Window>
