@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows;
-using MyApp.DataLayer.Services;
+using MyApp.BusinessLogicLayer.Services;
 using WpfApp1;
 
 namespace MyApp

@@ -1,64 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
 using MyApp.DataLayer.Models;
 
 namespace MyApp.DataLayer
 {
-    public class DbContext
+    public class DbContext : Microsoft.EntityFrameworkCore.DbContext
     {
-        private readonly string _connectionString;
+        public DbSet<User> Users { get; set; }
 
         public DbContext()
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().HasKey(u => u.NameId);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
             // Укажите строку подключения к вашему SQL Server
-            _connectionString = "Server=(localdb)\\mssqllocaldb;Database=bdkurs;Trusted_Connection=True;";
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=bdkurs;Trusted_Connection=True;");
         }
 
         public List<User> GetUsers()
         {
-            var users = new List<User>();
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var command = new SqlCommand("SELECT * FROM Users", connection);
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        users.Add(new User
-                        {
-                            Name = reader["Name"].ToString(),
-                            Email = reader["email"].ToString(),
-                            Password = reader["password"].ToString(),
-                            Role = reader["role"].ToString(),
-                            NameId = Convert.ToInt32(reader["NameId"])
-                        });
-                    }
-                }
-            }
-            return users;
+            // Используем LINQ для получения всех пользователей
+            return Users.AsNoTracking().ToList();
         }
 
         public void AddUser(User user)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-
-                // Указываем только те столбцы, для которых передаются значения
-                var command = new SqlCommand(
-                    "INSERT INTO Users (Name, email, password, role) VALUES (@Name, @Email, @Password, @Role)",
-                    connection);
-
-                command.Parameters.AddWithValue("@Name", user.Name);
-                command.Parameters.AddWithValue("@Email", user.Email);
-                command.Parameters.AddWithValue("@Password", user.Password);
-                command.Parameters.AddWithValue("@Role", user.Role);
-
-                command.ExecuteNonQuery(); // Выполняем запрос
-            }
+            // Добавляем пользователя и сохраняем изменения
+            Users.Add(user);
+            SaveChanges();
         }
     }
 }

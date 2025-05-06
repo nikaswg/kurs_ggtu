@@ -1,0 +1,16 @@
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\bin\Debug\net8.0\BusinessLogicLayer.deps.json
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\bin\Debug\net8.0\BusinessLogicLayer.dll
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\bin\Debug\net8.0\BusinessLogicLayer.pdb
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\bin\Debug\net8.0\DataLayer.dll
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\bin\Debug\net8.0\DataLayer.pdb
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\obj\Debug\net8.0\BusinessLogicLayer.csproj.AssemblyReference.cache
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\obj\Debug\net8.0\BusinessLogicLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\obj\Debug\net8.0\BusinessLogicLayer.AssemblyInfoInputs.cache
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\obj\Debug\net8.0\BusinessLogicLayer.AssemblyInfo.cs
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\obj\Debug\net8.0\BusinessLogicLayer.csproj.CoreCompileInputs.cache
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\obj\Debug\net8.0\BusinessLogicLayer.sourcelink.json
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\obj\Debug\net8.0\Business.450209FB.Up2Date
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\obj\Debug\net8.0\BusinessLogicLayer.dll
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\obj\Debug\net8.0\refint\BusinessLogicLayer.dll
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\obj\Debug\net8.0\BusinessLogicLayer.pdb
+C:\Users\Никита\Downloads\kurs_ggtu\BusinessLogicLayer\obj\Debug\net8.0\ref\BusinessLogicLayer.dll

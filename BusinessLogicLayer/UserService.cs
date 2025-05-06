@@ -2,8 +2,9 @@
 using System.Linq;
 using System.Runtime.CompilerServices;
 using MyApp.DataLayer.Models;
+using MyApp.DataLayer;
 
-namespace MyApp.DataLayer.Services
+namespace MyApp.BusinessLogicLayer.Services
 {
     public class UserService
     {
@@ -76,7 +77,6 @@ namespace MyApp.DataLayer.Services
                 Email = email,
                 Password = BCrypt.Net.BCrypt.HashPassword(password),
                 Role = "User",
-                NameId = _dbContext.GetUsers().Count + 1
             };
 
             _dbContext.AddUser(newUser);

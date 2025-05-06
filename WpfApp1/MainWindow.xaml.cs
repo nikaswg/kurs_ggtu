@@ -16,12 +16,12 @@ namespace MyApp
             NameTextBlock.Text = App.Name;
             EmailTextBlock.Text = App.Email;
             RoleTextBlock.Text = App.Role;
-            AuthButton.Content = App.Role == "Guest" ? "Войти" : "Выйти";
+            AuthButton.Content = (App.Role == "Guest" ) ? "Войти" : "Выйти";
         }
 
         private void AuthButton_Click(object sender, RoutedEventArgs e)
         {
-            if (App.Role == "Guest")
+            if (App.Role == "Guest") 
             {
                 var loginWindow = new LoginWindow();
                 loginWindow.ShowDialog();
