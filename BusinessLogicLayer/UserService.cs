@@ -8,11 +8,11 @@ namespace MyApp.BusinessLogicLayer.Services
 {
     public class UserService
     {
-        private readonly DbContext _dbContext;
+        private readonly AppDbContext _dbContext;
 
         public UserService()
         {
-            _dbContext = new DbContext();
+            _dbContext = new AppDbContext();
         }
 
         public User Authenticate(string email, string password)

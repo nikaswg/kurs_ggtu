@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using MyApp.WPF;
+using System.Windows;
 using WpfApp1;
 
 namespace MyApp
@@ -16,12 +17,12 @@ namespace MyApp
             NameTextBlock.Text = App.Name;
             EmailTextBlock.Text = App.Email;
             RoleTextBlock.Text = App.Role;
-            AuthButton.Content = (App.Role == "Guest" ) ? "Войти" : "Выйти";
+            AuthButton.Content = (App.Role == "Guest") ? "Войти" : "Выйти";
         }
 
         private void AuthButton_Click(object sender, RoutedEventArgs e)
         {
-            if (App.Role == "Guest") 
+            if (App.Role == "Guest")
             {
                 var loginWindow = new LoginWindow();
                 loginWindow.ShowDialog();
@@ -37,7 +38,9 @@ namespace MyApp
 
         private void CatalogButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Переход в каталог. (Реализуйте переход на другую страницу)");
+            var viewModel = new ComponentListViewModel(); // Создаем экземпляр ViewModel
+            var componentList = new ComponentListPage(viewModel); // Передаем его в конструктор
+            componentList.ShowDialog();
         }
     }
 }

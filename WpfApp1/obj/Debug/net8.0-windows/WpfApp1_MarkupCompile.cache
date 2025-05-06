@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
 C:\Users\Никита\Downloads\kurs_ggtu\WpfApp1\App.xaml
-3-1041084437
+51436958963
 
-6-846143020
+101831891174
 233-398791066
-LoginWindow.xaml;MainWindow.xaml;RegisterWindow.xaml;
+AddComponentWindow.xaml;ComponentListPage.xaml;LoginWindow.xaml;MainWindow.xaml;RegisterWindow.xaml;
 
 False
 

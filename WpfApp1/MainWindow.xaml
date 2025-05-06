@@ -13,5 +13,6 @@
 
         <Button x:Name="AuthButton" Content="Войти" HorizontalAlignment="Left" Margin="20,200,0,0" VerticalAlignment="Top" Width="100" Click="AuthButton_Click"/>
         <Button x:Name="CatalogButton" Content="Каталог" HorizontalAlignment="Left" Margin="140,200,0,0" VerticalAlignment="Top" Width="100" Click="CatalogButton_Click"/>
+        
     </Grid>
 </Window>

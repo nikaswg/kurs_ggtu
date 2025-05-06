@@ -94,3 +94,8 @@ C:\Users\Никита\Downloads\kurs_ggtu\WpfApp1\bin\Debug\net8.0-windows\Syste
 C:\Users\Никита\Downloads\kurs_ggtu\WpfApp1\bin\Debug\net8.0-windows\System.Text.Encodings.Web.dll
 C:\Users\Никита\Downloads\kurs_ggtu\WpfApp1\bin\Debug\net8.0-windows\System.Text.Json.dll
 C:\Users\Никита\Downloads\kurs_ggtu\WpfApp1\bin\Debug\net8.0-windows\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
+C:\Users\Никита\Downloads\kurs_ggtu\WpfApp1\obj\Debug\net8.0-windows\ComponentListPage.g.cs
+C:\Users\Никита\Downloads\kurs_ggtu\WpfApp1\obj\Debug\net8.0-windows\WpfApp1_MarkupCompile.lref
+C:\Users\Никита\Downloads\kurs_ggtu\WpfApp1\obj\Debug\net8.0-windows\ComponentListPage.baml
+C:\Users\Никита\Downloads\kurs_ggtu\WpfApp1\obj\Debug\net8.0-windows\AddComponentWindow.baml
+C:\Users\Никита\Downloads\kurs_ggtu\WpfApp1\obj\Debug\net8.0-windows\AddComponentWindow.g.cs
