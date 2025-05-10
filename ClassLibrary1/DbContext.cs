@@ -10,24 +10,49 @@ namespace MyApp.DataLayer
     {
         public DbSet<Component> Components { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<User> Users { get; set; } // Добавил DbSet<User>
+        public DbSet<User> Users { get; set; }
+        public DbSet<Assembly> Assemblies { get; set; }
+        public DbSet<AssemblyComponent> AssemblyComponents { get; set; }
+        public DbSet<AssemblyRating> AssemblyRatings { get; set; }
 
-        public AppDbContext()
-        {
-        }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Component>().HasKey(c => c.ComponentID);
             modelBuilder.Entity<Category>().HasKey(c => c.CategoryID);
-            modelBuilder.Entity<User>().HasKey(u => u.NameId); // Добавил конфигурацию для User
+            modelBuilder.Entity<User>().HasKey(u => u.NameId);
+            modelBuilder.Entity<Assembly>().HasKey(a => a.AssemblyID);
+            modelBuilder.Entity<AssemblyComponent>().HasKey(ac => ac.AssemblyComponentID);
+            modelBuilder.Entity<AssemblyRating>()
+    .HasOne<Assembly>()
+    .WithMany(a => a.Ratings)
+    .HasForeignKey(ar => ar.AssemblyId);
 
+            modelBuilder.Entity<Assembly>()
+                .HasOne(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.NameId);
+
+            modelBuilder.Entity<AssemblyComponent>()
+                .HasOne(ac => ac.Assembly)
+                .WithMany(a => a.AssemblyComponents)
+                .HasForeignKey(ac => ac.AssemblyID);
+
+            modelBuilder.Entity<AssemblyComponent>()
+                .HasOne(ac => ac.Component)
+                .WithMany()
+                .HasForeignKey(ac => ac.ComponentID);
         }
+
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Укажите строку подключения к вашему SQL Server
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=bdkurs;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=bdkurs2;Trusted_Connection=True;");
         }
 
         public List<Component> GetAllComponents()

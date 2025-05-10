@@ -1,4 +1,5 @@
-﻿using MyApp.WPF;
+﻿using MyApp.DataLayer;
+using MyApp.WPF;
 using System.Windows;
 using WpfApp1;
 
@@ -17,6 +18,7 @@ namespace MyApp
             NameTextBlock.Text = App.Name;
             EmailTextBlock.Text = App.Email;
             RoleTextBlock.Text = App.Role;
+            IdTextBlock.Text = App.NameId.ToString();
             AuthButton.Content = (App.Role == "Guest") ? "Войти" : "Выйти";
         }
 
@@ -41,6 +43,23 @@ namespace MyApp
             var viewModel = new ComponentListViewModel(); // Создаем экземпляр ViewModel
             var componentList = new ComponentListPage(viewModel); // Передаем его в конструктор
             componentList.ShowDialog();
+        }
+
+        private void BuildButton_Click(object sender, RoutedEventArgs e)
+        {
+            var builderWindow = new AssemblyBuilderWindow();
+            builderWindow.ShowDialog();
+        }
+
+        private void ACatalogButton_Click(object sender, RoutedEventArgs e)
+        {
+            {
+                using (var dbContext = new AppDbContext())
+                {
+                    var catalogWindow = new AssemblyCatalogWindow(dbContext);
+                    catalogWindow.ShowDialog();
+                }
+            }
         }
     }
 }

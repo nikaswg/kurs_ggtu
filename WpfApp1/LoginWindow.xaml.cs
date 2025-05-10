@@ -25,6 +25,7 @@ namespace MyApp
                     App.Name = user.Name;
                     App.Email = user.Email;
                     App.Role = user.Role;
+                    App.NameId = user.NameId;
                     MessageBox.Show("Вход выполнен успешно.");
                     Close();
                 }

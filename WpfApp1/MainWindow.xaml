@@ -10,9 +10,13 @@
         <TextBlock x:Name="EmailTextBlock" HorizontalAlignment="Left" Margin="80,110,0,0" VerticalAlignment="Top" FontSize="14"/>
         <TextBlock Text="Роль: " HorizontalAlignment="Left" Margin="20,140,0,0" VerticalAlignment="Top" FontSize="14"/>
         <TextBlock x:Name="RoleTextBlock" HorizontalAlignment="Left" Margin="80,140,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <TextBlock Text="Id: " HorizontalAlignment="Left" Margin="20,170,0,0" VerticalAlignment="Top" FontSize="14"/>
+        <TextBlock x:Name="IdTextBlock" HorizontalAlignment="Left" Margin="80,170,0,0" VerticalAlignment="Top" FontSize="14"/>
 
         <Button x:Name="AuthButton" Content="Войти" HorizontalAlignment="Left" Margin="20,200,0,0" VerticalAlignment="Top" Width="100" Click="AuthButton_Click"/>
         <Button x:Name="CatalogButton" Content="Каталог" HorizontalAlignment="Left" Margin="140,200,0,0" VerticalAlignment="Top" Width="100" Click="CatalogButton_Click"/>
-        
+        <Button Content="Сборка ПК" HorizontalAlignment="Left" Margin="260,200,0,0" VerticalAlignment="Top" Width="100" Click="BuildButton_Click"/>
+        <Button Content="Каталог сборок" HorizontalAlignment="Left" Margin="380,200,0,0"
+        VerticalAlignment="Top" Width="120" Click="ACatalogButton_Click"/>
     </Grid>
 </Window>

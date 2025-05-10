@@ -5,6 +5,12 @@
     <Compile Update="AddComponentWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="AssemblyBuilderWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="AssemblyCatalogWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="ComponentListPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

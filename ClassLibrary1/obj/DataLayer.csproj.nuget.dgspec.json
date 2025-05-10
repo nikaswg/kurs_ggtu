@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Никита\\Downloads\\kurs_ggtu\\ClassLibrary1\\DataLayer.csproj": {}
+    "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\ClassLibrary1\\DataLayer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Никита\\Downloads\\kurs_ggtu\\ClassLibrary1\\DataLayer.csproj": {
+    "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\ClassLibrary1\\DataLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Никита\\Downloads\\kurs_ggtu\\ClassLibrary1\\DataLayer.csproj",
+        "projectUniqueName": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\ClassLibrary1\\DataLayer.csproj",
         "projectName": "DataLayer",
-        "projectPath": "C:\\Users\\Никита\\Downloads\\kurs_ggtu\\ClassLibrary1\\DataLayer.csproj",
-        "packagesPath": "C:\\Users\\Никита\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Никита\\Downloads\\kurs_ggtu\\ClassLibrary1\\obj\\",
+        "projectPath": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\ClassLibrary1\\DataLayer.csproj",
+        "packagesPath": "C:\\Users\\Nikita\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\ClassLibrary1\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Никита\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Nikita\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -67,6 +67,12 @@
               "target": "Package",
               "version": "[9.0.4, )"
             },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.9.0, )"
@@ -88,7 +94,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
