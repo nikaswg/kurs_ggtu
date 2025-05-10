@@ -13,7 +13,6 @@ namespace MyApp.DataLayer
         public DbSet<User> Users { get; set; }
         public DbSet<Assembly> Assemblies { get; set; }
         public DbSet<AssemblyComponent> AssemblyComponents { get; set; }
-        public DbSet<AssemblyRating> AssemblyRatings { get; set; }
 
 
 
@@ -26,10 +25,7 @@ namespace MyApp.DataLayer
             modelBuilder.Entity<User>().HasKey(u => u.NameId);
             modelBuilder.Entity<Assembly>().HasKey(a => a.AssemblyID);
             modelBuilder.Entity<AssemblyComponent>().HasKey(ac => ac.AssemblyComponentID);
-            modelBuilder.Entity<AssemblyRating>()
-    .HasOne<Assembly>()
-    .WithMany(a => a.Ratings)
-    .HasForeignKey(ar => ar.AssemblyId);
+            
 
             modelBuilder.Entity<Assembly>()
                 .HasOne(a => a.User)

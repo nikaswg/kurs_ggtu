@@ -13,46 +13,25 @@ namespace MyApp.WPF
             DataContext = new AssemblyCatalogViewModel(dbContext);
         }
 
-        private void Close_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
+        private void Close_Click(object sender, RoutedEventArgs e) => Close();
 
         private void Like_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (sender is Button button && button.Tag is Assembly assembly)
             {
-                var button = sender as Button;
-                var assembly = button.Tag as Assembly;
-                if (assembly != null)
-                {
-                    var viewModel = DataContext as AssemblyCatalogViewModel;
-                    viewModel.LikeAssembly(assembly, App.Email);
-                    MessageBox.Show("Вы оценили сборку!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при оценке сборки: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                var viewModel = (AssemblyCatalogViewModel)DataContext;
+                viewModel.LikeAssembly(assembly.AssemblyID);
+                MessageBox.Show("Рейтинг увеличен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
         private void Dislike_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (sender is Button button && button.Tag is Assembly assembly)
             {
-                var button = sender as Button;
-                var assembly = button.Tag as Assembly;
-                if (assembly != null)
-                {
-                    var viewModel = DataContext as AssemblyCatalogViewModel;
-                    viewModel.DislikeAssembly(assembly, App.Email);
-                    MessageBox.Show("Вы сняли оценку с сборки!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Ошибка при снятии оценки: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                var viewModel = (AssemblyCatalogViewModel)DataContext;
+                viewModel.DislikeAssembly(assembly.AssemblyID);
+                MessageBox.Show("Рейтинг уменьшен!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
     }
