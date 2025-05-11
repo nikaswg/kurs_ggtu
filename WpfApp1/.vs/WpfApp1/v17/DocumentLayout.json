@@ -152,8 +152,7 @@
               "RelativeToolTip": "AssemblyCatalogWindow.xaml.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAAA6wCUAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-10T17:00:00.481Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T17:00:00.481Z"
             },
             {
               "$type": "Document",
@@ -165,8 +164,7 @@
               "RelativeToolTip": "AssemblyCatalogViewModel.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAE4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-10T16:32:18.355Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T16:32:18.355Z"
             },
             {
               "$type": "Document",
@@ -178,8 +176,7 @@
               "RelativeToolTip": "..\\ClassLibrary1\\Assemblies.cs",
               "ViewState": "AgIAADQAAAAAAAAAAAA7wDoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-10T11:47:14.07Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T11:47:14.07Z"
             },
             {
               "$type": "Document",
@@ -191,8 +188,7 @@
               "RelativeToolTip": "..\\BusinessLogicLayer\\AssemblyService.cs",
               "ViewState": "AgIAAA0AAAAAAAAAAAAkwCAAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-10T11:48:57.3Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T11:48:57.3Z"
             },
             {
               "$type": "Document",
@@ -204,22 +200,16 @@
               "RelativeToolTip": "..\\ClassLibrary1\\DbContext.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAhwA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-10T11:12:53.588Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T11:12:53.588Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "dbo.Assemblies [\u0414\u0430\u043D\u043D\u044B\u0435]",
+              "Title": "dbo.Assemblies.sql",
               "DocumentMoniker": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/bdkurs2/True/SqlTable/dbo.Assemblies.sql",
-              "ToolTip": "dbo.Assemblies [\u0414\u0430\u043D\u043D\u044B\u0435]",
+              "ToolTip": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/bdkurs2/True/SqlTable/dbo.Assemblies.sql",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2025-05-10T16:35:21.056Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+              "WhenOpened": "2025-05-10T16:35:21.056Z"
             },
             {
               "$type": "Document",
@@ -231,8 +221,7 @@
               "RelativeToolTip": "AssemblyBuilderViewModel.cs",
               "ViewState": "AgIAAAIAAAAAAAAAAAAAAGgAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-10T11:49:34.054Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T11:49:34.054Z"
             },
             {
               "$type": "Document",
@@ -244,8 +233,7 @@
               "RelativeToolTip": "AssemblyBuilderWindow.xaml.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-10T11:53:21.385Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-10T11:53:21.385Z"
             },
             {
               "$type": "Document",
@@ -569,6 +557,10 @@
               "ToolTip": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/bdkurs/True/SqlTable/dbo.Reviews.sql",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
               "WhenOpened": "2025-04-22T15:46:15.438Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             }
           ]
         }
