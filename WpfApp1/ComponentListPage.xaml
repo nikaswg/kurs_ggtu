@@ -13,30 +13,110 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
-            
         </Grid.RowDefinitions>
 
         <!-- Фильтры и поиск -->
         <StackPanel Orientation="Horizontal" Margin="10">
-            <TextBlock Text="Поиск:" Margin="5"/>
-            <TextBox Width="150" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Text="Цена от:" Margin="5"/>
-            <TextBox Width="80" Text="{Binding MinPrice, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Text="до:" Margin="5"/>
-            <TextBox Width="80" Text="{Binding MaxPrice, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Content="Применить" Command="{Binding FilterCommand}" Margin="5"/>
-            <!-- В ComponentListPage.xaml добавьте кнопку в StackPanel с фильтрами -->
-            <Button Content="Добавить" Command="{Binding ShowAddWindowCommand}" Margin="5"/>
+            <StackPanel Orientation="Vertical" Margin="0,0,10,0">
+                <TextBlock Text="Поиск по названию:" Margin="5,5,5,0"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox Width="200" Text="{Binding NameSearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Content="Найти" Command="{Binding NameSearchCommand}" Margin="5,0,0,0"/>
+                    <Button Content="Сброс" Command="{Binding ResetNameSearchCommand}" Margin="5,0,0,0"/>
+                </StackPanel>
+                <CheckBox Content="Точное совпадение" IsChecked="{Binding ExactMatch}" Margin="5"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Фильтр по цене:" Margin="5,5,5,0"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="от:" Margin="5,0,0,0"/>
+                    <TextBox Width="80" Text="{Binding MinPrice, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding FilterCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
+                    <TextBlock Text="до:" Margin="5,0,0,0"/>
+                    <TextBox Width="80" Text="{Binding MaxPrice, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding FilterCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
+                    <Button Content="Применить" Command="{Binding FilterCommand}" Margin="5,0,0,0"/>
+                    <Button Content="Сброс" Command="{Binding ResetFilterCommand}" Margin="5,0,0,0"/>
+                </StackPanel>
+            </StackPanel>
+
+            <Button Content="Добавить" Command="{Binding ShowAddWindowCommand}" Margin="5"
+                    Visibility="{Binding IsAdmin, Converter={StaticResource BoolToVisibilityConverter}}"/>
         </StackPanel>
 
         <!-- Список комплектующих -->
-        <ListView Grid.Row="1" ItemsSource="{Binding Components}" Margin="10">
+        <ListView Grid.Row="1" ItemsSource="{Binding Components}" Margin="10" SelectedItem="{Binding SelectedComponent}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Название" DisplayMemberBinding="{Binding Name}" Width="150"/>
-                    <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding Description}" Width="250"/>
-                    <GridViewColumn Header="Цена" DisplayMemberBinding="{Binding Price}" Width="80"/>
-                    <GridViewColumn Header="Категория" DisplayMemberBinding="{Binding Category.Name}" Width="100"/>
+                    <GridViewColumn Header="Название" Width="150">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <Button Content="Название" 
+                                        Command="{Binding DataContext.SortCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                        CommandParameter="Name"
+                                        Style="{StaticResource HeaderButtonStyle}"/>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.DisplayMemberBinding>
+                            <Binding Path="Name"/>
+                        </GridViewColumn.DisplayMemberBinding>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Описание" Width="250">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <Button Content="Описание" 
+                                        Command="{Binding DataContext.SortCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                        CommandParameter="Description"
+                                        Style="{StaticResource HeaderButtonStyle}"/>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.DisplayMemberBinding>
+                            <Binding Path="Description"/>
+                        </GridViewColumn.DisplayMemberBinding>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Цена" Width="80">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <Button Content="Цена" 
+                                        Command="{Binding DataContext.SortCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                        CommandParameter="Price"
+                                        Style="{StaticResource HeaderButtonStyle}"/>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.DisplayMemberBinding>
+                            <Binding Path="Price"/>
+                        </GridViewColumn.DisplayMemberBinding>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Категория" Width="100">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <Button Content="Категория" 
+                                        Command="{Binding DataContext.SortCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                        CommandParameter="Category.Name"
+                                        Style="{StaticResource HeaderButtonStyle}"/>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.DisplayMemberBinding>
+                            <Binding Path="Category.Name"/>
+                        </GridViewColumn.DisplayMemberBinding>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Редактировать" 
+                                        Command="{Binding DataContext.EditComponentCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                        CommandParameter="{Binding}"
+                                        Visibility="{Binding DataContext.IsAdmin, RelativeSource={RelativeSource AncestorType=ListView}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>

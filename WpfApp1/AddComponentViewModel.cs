@@ -32,7 +32,7 @@ namespace MyApp.WPF
 
         private void AddComponent()
         {
-            _componentService.AddComponent(NewComponent);
+            _componentService.AddComponent(NewComponent, App.Role);
             NewComponent = new Component(); // Сброс формы после добавления
         }
 

@@ -1,0 +1,32 @@
+﻿<Window x:Class="MyApp.WPF.EditComponentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Редактирование компонента" Height="300" Width="400">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Название:" Grid.Row="0"/>
+        <TextBox Text="{Binding Component.Name}" Grid.Row="1" Margin="0,0,0,10"/>
+
+        <TextBlock Text="Описание:" Grid.Row="2"/>
+        <TextBox Text="{Binding Component.Description}" Grid.Row="3" Margin="0,0,0,10"/>
+
+        <TextBlock Text="Цена:" Grid.Row="4"/>
+        <TextBox Text="{Binding Component.Price}" Grid.Row="5" Margin="0,0,0,10"/>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="6" HorizontalAlignment="Right">
+            <Button Content="Сохранить" Width="80" Margin="0,0,10,0" IsDefault="True" Click="SaveButton_Click"/>
+            <Button Content="Отмена" Width="80" IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

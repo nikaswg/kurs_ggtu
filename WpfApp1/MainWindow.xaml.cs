@@ -40,9 +40,16 @@ namespace MyApp
 
         private void CatalogButton_Click(object sender, RoutedEventArgs e)
         {
-            var viewModel = new ComponentListViewModel(); // Создаем экземпляр ViewModel
-            var componentList = new ComponentListPage(viewModel); // Передаем его в конструктор
-            componentList.ShowDialog();
+            if (App.Role == "Guest")
+            {
+                MessageBox.Show("Только зарегистрированные пользователи могут просматривать комплектующие", "Нет доступа", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            else
+            {
+                var viewModel = new ComponentListViewModel(); // Создаем экземпляр ViewModel
+                var componentList = new ComponentListPage(viewModel); // Передаем его в конструктор
+                componentList.ShowDialog();
+            }
         }
 
         private void BuildButton_Click(object sender, RoutedEventArgs e)
