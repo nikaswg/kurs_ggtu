@@ -288,3 +288,5 @@ C:\Users\Nikita\Downloads\kurs_ggtu\WpfApp1\bin\Debug\net8.0-windows\zh-Hant\Mic
 C:\Users\Nikita\Downloads\kurs_ggtu\WpfApp1\obj\Debug\net8.0-windows\App.baml
 C:\Users\Nikita\Downloads\kurs_ggtu\WpfApp1\obj\Debug\net8.0-windows\EditComponentWindow.baml
 C:\Users\Nikita\Downloads\kurs_ggtu\WpfApp1\obj\Debug\net8.0-windows\EditComponentWindow.g.cs
+C:\Users\Nikita\Downloads\kurs_ggtu\WpfApp1\obj\Debug\net8.0-windows\ReviewsWindow.baml
+C:\Users\Nikita\Downloads\kurs_ggtu\WpfApp1\obj\Debug\net8.0-windows\ReviewsWindow.g.cs

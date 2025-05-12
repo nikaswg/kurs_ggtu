@@ -7,5 +7,7 @@
         public string Password { get; set; }
         public string Role { get; set; }
         public int NameId { get; set; }
+
+        public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
     }
 }

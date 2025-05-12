@@ -35,6 +35,10 @@ namespace MyApp.DataLayer.Models
 
         public ICollection<AssemblyComponent> AssemblyComponents { get; set; }
 
+        public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -14,7 +14,7 @@ namespace MyApp.DataLayer
         public DbSet<Assembly> Assemblies { get; set; }
         public DbSet<AssemblyComponent> AssemblyComponents { get; set; }
 
-
+        public DbSet<Review> Reviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,7 +25,21 @@ namespace MyApp.DataLayer
             modelBuilder.Entity<User>().HasKey(u => u.NameId);
             modelBuilder.Entity<Assembly>().HasKey(a => a.AssemblyID);
             modelBuilder.Entity<AssemblyComponent>().HasKey(ac => ac.AssemblyComponentID);
-            
+            modelBuilder.Entity<Review>().HasKey(ac => ac.ReviewID);
+
+            // Связь Review -> Assembly
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Assembly)
+                .WithMany(a => a.Reviews)
+                .HasForeignKey(r => r.AssemblyID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Связь Review -> User
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.User)
+                .WithMany(u => u.Reviews)
+                .HasForeignKey(r => r.NameID)
+                .OnDelete(DeleteBehavior.Cascade); // Изменил на Cascade, так как NameID не nullable
 
             modelBuilder.Entity<Assembly>()
                 .HasOne(a => a.User)

@@ -3,8 +3,46 @@
   "WorkspaceRootPath": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/bdkurs2/True/SqlTable/dbo.Reviews.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E025C8B-348A-4A9C-8C84-99A87CD2E0E6}|WpfApp1.csproj|c:\\users\\nikita\\downloads\\kurs_ggtu\\wpfapp1\\reviewswindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E025C8B-348A-4A9C-8C84-99A87CD2E0E6}|WpfApp1.csproj|solutionrelative:reviewswindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E025C8B-348A-4A9C-8C84-99A87CD2E0E6}|WpfApp1.csproj|c:\\users\\nikita\\downloads\\kurs_ggtu\\wpfapp1\\reviewswindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{0E025C8B-348A-4A9C-8C84-99A87CD2E0E6}|WpfApp1.csproj|solutionrelative:reviewswindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FBB3D4AD-98F8-43B1-B37C-91A1147D6127}|..\\ClassLibrary1\\DataLayer.csproj|c:\\users\\nikita\\downloads\\kurs_ggtu\\classlibrary1\\review.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E025C8B-348A-4A9C-8C84-99A87CD2E0E6}|WpfApp1.csproj|c:\\users\\nikita\\downloads\\kurs_ggtu\\wpfapp1\\assemblycatalogviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E025C8B-348A-4A9C-8C84-99A87CD2E0E6}|WpfApp1.csproj|solutionrelative:assemblycatalogviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FBB3D4AD-98F8-43B1-B37C-91A1147D6127}|..\\ClassLibrary1\\DataLayer.csproj|c:\\users\\nikita\\downloads\\kurs_ggtu\\classlibrary1\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FBB3D4AD-98F8-43B1-B37C-91A1147D6127}|..\\ClassLibrary1\\DataLayer.csproj|c:\\users\\nikita\\downloads\\kurs_ggtu\\classlibrary1\\assemblies.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{0E025C8B-348A-4A9C-8C84-99A87CD2E0E6}|WpfApp1.csproj|c:\\users\\nikita\\downloads\\kurs_ggtu\\wpfapp1\\componentlistviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0E025C8B-348A-4A9C-8C84-99A87CD2E0E6}|WpfApp1.csproj|solutionrelative:componentlistviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FBB3D4AD-98F8-43B1-B37C-91A1147D6127}|..\\ClassLibrary1\\DataLayer.csproj|c:\\users\\nikita\\downloads\\kurs_ggtu\\classlibrary1\\dbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E025C8B-348A-4A9C-8C84-99A87CD2E0E6}|WpfApp1.csproj|c:\\users\\nikita\\downloads\\kurs_ggtu\\wpfapp1\\assemblycatalogwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0E025C8B-348A-4A9C-8C84-99A87CD2E0E6}|WpfApp1.csproj|solutionrelative:assemblycatalogwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0E025C8B-348A-4A9C-8C84-99A87CD2E0E6}|WpfApp1.csproj|c:\\users\\nikita\\downloads\\kurs_ggtu\\wpfapp1\\assemblycatalogwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{0E025C8B-348A-4A9C-8C84-99A87CD2E0E6}|WpfApp1.csproj|solutionrelative:assemblycatalogwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5AD4DD84-04BA-474E-B547-EF52E1C72FB2}|..\\BusinessLogicLayer\\BusinessLogicLayer.csproj|c:\\users\\nikita\\downloads\\kurs_ggtu\\businesslogiclayer\\assemblyqueryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5AD4DD84-04BA-474E-B547-EF52E1C72FB2}|..\\BusinessLogicLayer\\BusinessLogicLayer.csproj|c:\\users\\nikita\\downloads\\kurs_ggtu\\businesslogiclayer\\componentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
@@ -51,64 +89,198 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "dbo.Reviews [\u0414\u0430\u043D\u043D\u044B\u0435]",
+              "DocumentMoniker": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/bdkurs2/True/SqlTable/dbo.Reviews.sql",
+              "ToolTip": "dbo.Reviews [\u0414\u0430\u043D\u043D\u044B\u0435]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2025-05-12T22:44:33.907Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ReviewsWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\ReviewsWindow.xaml.cs",
+              "RelativeDocumentMoniker": "ReviewsWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\ReviewsWindow.xaml.cs",
+              "RelativeToolTip": "ReviewsWindow.xaml.cs",
+              "ViewState": "AgIAAEMAAAAAAAAAAAAgwE8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T22:17:52.463Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ReviewsWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\ReviewsWindow.xaml",
+              "RelativeDocumentMoniker": "ReviewsWindow.xaml",
+              "ToolTip": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\ReviewsWindow.xaml",
+              "RelativeToolTip": "ReviewsWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-12T22:17:30.204Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Review.cs",
+              "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\ClassLibrary1\\Review.cs",
+              "RelativeDocumentMoniker": "..\\ClassLibrary1\\Review.cs",
+              "ToolTip": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\ClassLibrary1\\Review.cs",
+              "RelativeToolTip": "..\\ClassLibrary1\\Review.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAAwBEAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T22:07:08.122Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "DbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\ClassLibrary1\\DbContext.cs",
+              "RelativeDocumentMoniker": "..\\ClassLibrary1\\DbContext.cs",
+              "ToolTip": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\ClassLibrary1\\DbContext.cs",
+              "RelativeToolTip": "..\\ClassLibrary1\\DbContext.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAcwCkAAABkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T22:06:52.326Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "ComponentListViewModel.cs",
               "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\ComponentListViewModel.cs",
               "RelativeDocumentMoniker": "ComponentListViewModel.cs",
-              "ToolTip": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\ComponentListViewModel.cs*",
-              "RelativeToolTip": "ComponentListViewModel.cs*",
-              "ViewState": "AgIAAIQAAAAAAAAAAAAuwJgAAAAJAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\ComponentListViewModel.cs",
+              "RelativeToolTip": "ComponentListViewModel.cs",
+              "ViewState": "AgIAAIQAAAAAAAAAAAA+wI8AAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-12T17:47:35.031Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
+              "Title": "AssemblyCatalogViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\AssemblyCatalogViewModel.cs",
+              "RelativeDocumentMoniker": "AssemblyCatalogViewModel.cs",
+              "ToolTip": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\AssemblyCatalogViewModel.cs",
+              "RelativeToolTip": "AssemblyCatalogViewModel.cs",
+              "ViewState": "AgIAADQAAAAAAAAAAAAAADMAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T21:57:56.639Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Assemblies.cs",
+              "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\ClassLibrary1\\Assemblies.cs",
+              "RelativeDocumentMoniker": "..\\ClassLibrary1\\Assemblies.cs",
+              "ToolTip": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\ClassLibrary1\\Assemblies.cs",
+              "RelativeToolTip": "..\\ClassLibrary1\\Assemblies.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAmwCcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T22:28:03.039Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\ClassLibrary1\\User.cs",
+              "RelativeDocumentMoniker": "..\\ClassLibrary1\\User.cs",
+              "ToolTip": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\ClassLibrary1\\User.cs",
+              "RelativeToolTip": "..\\ClassLibrary1\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAABWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T22:28:28.848Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AssemblyQueryService.cs",
+              "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\BusinessLogicLayer\\AssemblyQueryService.cs",
+              "RelativeDocumentMoniker": "..\\BusinessLogicLayer\\AssemblyQueryService.cs",
+              "ToolTip": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\BusinessLogicLayer\\AssemblyQueryService.cs",
+              "RelativeToolTip": "..\\BusinessLogicLayer\\AssemblyQueryService.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAUwB4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T21:58:03.086Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AssemblyCatalogWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\AssemblyCatalogWindow.xaml.cs",
+              "RelativeDocumentMoniker": "AssemblyCatalogWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\AssemblyCatalogWindow.xaml.cs",
+              "RelativeToolTip": "AssemblyCatalogWindow.xaml.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAawCAAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-12T21:57:50.03Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "AssemblyCatalogWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\AssemblyCatalogWindow.xaml",
+              "RelativeDocumentMoniker": "AssemblyCatalogWindow.xaml",
+              "ToolTip": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\AssemblyCatalogWindow.xaml",
+              "RelativeToolTip": "AssemblyCatalogWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-12T21:57:42.048Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "ComponentService.cs",
               "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\BusinessLogicLayer\\ComponentService.cs",
               "RelativeDocumentMoniker": "..\\BusinessLogicLayer\\ComponentService.cs",
-              "ToolTip": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\BusinessLogicLayer\\ComponentService.cs*",
-              "RelativeToolTip": "..\\BusinessLogicLayer\\ComponentService.cs*",
+              "ToolTip": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\BusinessLogicLayer\\ComponentService.cs",
+              "RelativeToolTip": "..\\BusinessLogicLayer\\ComponentService.cs",
               "ViewState": "AgIAAEQAAAAAAAAAAAAuwEwAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-12T17:45:21.448Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-12T17:45:21.448Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "dbo.Category [\u0414\u0430\u043D\u043D\u044B\u0435]",
+              "DocumentIndex": 15,
+              "Title": "dbo.Category.sql",
               "DocumentMoniker": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/bdkurs2/True/SqlTable/dbo.Category.sql",
-              "ToolTip": "dbo.Category [\u0414\u0430\u043D\u043D\u044B\u0435]",
+              "ToolTip": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/bdkurs2/True/SqlTable/dbo.Category.sql",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2025-05-12T19:28:46.661Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-12T19:28:46.661Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 13,
               "Title": "ComponentListPage.xaml",
               "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\ComponentListPage.xaml",
               "RelativeDocumentMoniker": "ComponentListPage.xaml",
               "ToolTip": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\ComponentListPage.xaml",
               "RelativeToolTip": "ComponentListPage.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-05-12T17:53:06.115Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-12T17:53:06.115Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "dbo.Users [\u0414\u0430\u043D\u043D\u044B\u0435]",
+              "DocumentIndex": 17,
+              "Title": "dbo.Users.sql",
               "DocumentMoniker": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/bdkurs2/True/SqlTable/dbo.Users.sql",
-              "ToolTip": "dbo.Users [\u0414\u0430\u043D\u043D\u044B\u0435]",
+              "ToolTip": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/bdkurs2/True/SqlTable/dbo.Users.sql",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2025-05-12T19:27:16.239Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-12T19:27:16.239Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 14,
               "Title": "ComponentListPage.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\ComponentListPage.xaml.cs",
               "RelativeDocumentMoniker": "ComponentListPage.xaml.cs",
@@ -116,12 +288,11 @@
               "RelativeToolTip": "ComponentListPage.xaml.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-12T17:54:39.171Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-12T17:54:39.171Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 18,
               "Title": "App.xaml",
               "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\App.xaml",
               "RelativeDocumentMoniker": "App.xaml",
@@ -133,17 +304,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "dbo.Components [\u0414\u0430\u043D\u043D\u044B\u0435]",
+              "DocumentIndex": 16,
+              "Title": "dbo.Components.sql",
               "DocumentMoniker": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/bdkurs2/True/SqlTable/dbo.Components.sql",
-              "ToolTip": "dbo.Components [\u0414\u0430\u043D\u043D\u044B\u0435]",
+              "ToolTip": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/bdkurs2/True/SqlTable/dbo.Components.sql",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2025-05-12T19:26:21.341Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-12T19:26:21.341Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 20,
               "Title": "App.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\App.xaml.cs",
               "RelativeDocumentMoniker": "App.xaml.cs",
@@ -155,7 +325,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 19,
               "Title": "AddComponentViewModel.cs",
               "DocumentMoniker": "C:\\Users\\Nikita\\Downloads\\kurs_ggtu\\WpfApp1\\AddComponentViewModel.cs",
               "RelativeDocumentMoniker": "AddComponentViewModel.cs",
@@ -163,8 +333,7 @@
               "RelativeToolTip": "AddComponentViewModel.cs",
               "ViewState": "AgIAABQAAAAAAAAAAAA7wCIAAABBAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-12T18:54:59.197Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-12T18:54:59.197Z"
             }
           ]
         }

@@ -1,9 +1,23 @@
 ﻿<Window x:Class="MyApp.WPF.AssemblyCatalogWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Каталог сборок" Height="500" Width="800">
+        xmlns:local="clr-namespace:MyApp.WPF"
+        Title="Каталог сборок" Height="700" Width="1000">
     <Grid Margin="10">
-        <ListView ItemsSource="{Binding Assemblies}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Sorting and actions -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
+            <Button Content="Сортировать по рейтингу (↑)" Command="{Binding SortByRatingCommand}" Margin="0,0,10,0"/>
+            <Button Content="Сортировать по рейтингу (↓)" Command="{Binding SortByRatingDescCommand}" Margin="0,0,10,0"/>
+        </StackPanel>
+
+        <!-- Assemblies List -->
+        <ListView ItemsSource="{Binding Assemblies}" Grid.Row="1">
             <ListView.Resources>
                 <Style TargetType="ListViewItem">
                     <Setter Property="BorderBrush" Value="Gray"/>
@@ -12,11 +26,12 @@
             </ListView.Resources>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding Description}" Width="400"/>
-                    <GridViewColumn Header="Оценка" DisplayMemberBinding="{Binding Rating}" Width="100"/>
-                    <GridViewColumn Header="Почта пользователя" Width="150" 
+                    <GridViewColumn Header="ID" DisplayMemberBinding="{Binding AssemblyID}" Width="50"/>
+                    <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding Description}" Width="300"/>
+                    <GridViewColumn Header="Оценка" DisplayMemberBinding="{Binding Rating}" Width="80"/>
+                    <GridViewColumn Header="Пользователь" Width="150" 
                                     DisplayMemberBinding="{Binding User.Email}"/>
-                    <GridViewColumn Header="Компоненты" Width="300">
+                    <GridViewColumn Header="Компоненты" Width="250">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <ItemsControl ItemsSource="{Binding AssemblyComponents}">
@@ -29,12 +44,19 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Действия" Width="150">
+                    <GridViewColumn Header="Действия" Width="200">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="👍" Click="Like_Click" Tag="{Binding}"/>
-                                    <Button Content="👎" Click="Dislike_Click" Tag="{Binding}"/>
+                                    <Button Content="👍" Command="{Binding DataContext.LikeAssemblyCommand, RelativeSource={RelativeSource AncestorType=ListView}}" 
+                                            CommandParameter="{Binding AssemblyID}" Margin="0,0,5,0"/>
+                                    <Button Content="👎" Command="{Binding DataContext.DislikeAssemblyCommand, RelativeSource={RelativeSource AncestorType=ListView}}" 
+                                            CommandParameter="{Binding AssemblyID}" Margin="0,0,5,0"/>
+                                    <Button Content="Отзывы" Command="{Binding DataContext.ShowReviewsCommand, RelativeSource={RelativeSource AncestorType=ListView}}" 
+                                            CommandParameter="{Binding AssemblyID}" Margin="0,0,5,0"/>
+                                    <Button Content="Удалить" Command="{Binding DataContext.DeleteAssemblyCommand, RelativeSource={RelativeSource AncestorType=ListView}}" 
+                                            CommandParameter="{Binding AssemblyID}" Margin="0,0,5,0"
+                                            Visibility="{Binding DataContext.IsAdmin, RelativeSource={RelativeSource AncestorType=ListView}, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -42,7 +64,9 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button Content="Закрыть" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                Margin="10" Width="100" Height="30" Click="Close_Click"/>
+
+        <!-- Close button -->
+        <Button Content="Закрыть" Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Margin="10" Width="100" Height="30" Command="{Binding CloseCommand}"/>
     </Grid>
 </Window>
