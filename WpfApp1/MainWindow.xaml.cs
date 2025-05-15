@@ -54,8 +54,15 @@ namespace MyApp
 
         private void BuildButton_Click(object sender, RoutedEventArgs e)
         {
-            var builderWindow = new AssemblyBuilderWindow();
-            builderWindow.ShowDialog();
+            if (App.Role == "Guest")
+            {
+                MessageBox.Show("Только зарегистрированные пользователи могут просматривать комплектующие", "Нет доступа", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+            }
+            else
+            {
+                var builderWindow = new AssemblyBuilderWindow();
+                builderWindow.ShowDialog();
+            }
         }
 
         private void ACatalogButton_Click(object sender, RoutedEventArgs e)

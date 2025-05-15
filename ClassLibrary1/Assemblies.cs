@@ -33,6 +33,16 @@ namespace MyApp.DataLayer.Models
             }
         }
 
+        [NotMapped] // Это поле не будет сохраняться в БД
+        public decimal TotalPrice
+        {
+            get
+            {
+                if (AssemblyComponents == null) return 0;
+                return AssemblyComponents.Sum(ac => ac.Component?.Price ?? 0);
+            }
+        }
+
         public ICollection<AssemblyComponent> AssemblyComponents { get; set; }
 
         public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();

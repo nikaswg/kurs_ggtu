@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyApp.DataLayer.Models
@@ -24,5 +25,12 @@ namespace MyApp.DataLayer.Models
 
         [ForeignKey("CategoryID")] // Указывает, что это внешний ключ
         public Category Category { get; set; } // Навигационное свойство
+
+        [NotMapped]
+        public string NameWithCategory => $"{Name} ({Category?.Name})";
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

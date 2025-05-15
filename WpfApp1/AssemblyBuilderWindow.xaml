@@ -11,29 +11,26 @@
 
         <StackPanel>
             <TextBlock Text="Доступные компоненты" FontWeight="Bold"/>
-            <ListBox ItemsSource="{Binding AvailableComponents}" DisplayMemberPath="Name"
+            <ListBox ItemsSource="{Binding AvailableComponents}" DisplayMemberPath="NameWithCategory"
                      SelectedItem="{Binding SelectedAvailable}" Height="300"/>
         </StackPanel>
 
         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-            <Button Content=">>" Command="{Binding AddComponentCommand}" Margin="5"/>
-            <Button Content="&lt;" Command="{Binding RemoveComponentCommand}" Margin="5"/>
+            <Button Content=">>" Command="{Binding AddComponentCommand}" Margin="5" Width="50"/>
+            <Button Content="&lt;" Command="{Binding RemoveComponentCommand}" Margin="5" Width="50"/>
         </StackPanel>
 
         <StackPanel Grid.Column="2">
             <TextBlock Text="Выбранные компоненты" FontWeight="Bold"/>
-            <ListBox ItemsSource="{Binding SelectedComponents}" DisplayMemberPath="Name"
+            <ListBox ItemsSource="{Binding SelectedComponents}" DisplayMemberPath="NameWithCategory"
                      SelectedItem="{Binding SelectedInBuild}" Height="300"/>
         </StackPanel>
 
         <StackPanel Grid.ColumnSpan="3" Margin="0,320,0,0">
-            <TextBlock Text="Название сборки"/>
-            <TextBox Text="{Binding Name}" Height="30" Margin="0,5,0,10"/>
-
             <TextBlock Text="Описание сборки"/>
-            <TextBox Text="{Binding Description}" Height="40" Margin="0,5,0,10"/>
+            <TextBox Text="{Binding Description}" Height="60" Margin="0,5,0,10" TextWrapping="Wrap"/>
 
-            <Button Content="Сохранить сборку" Command="{Binding SaveAssemblyCommand}" Height="40"/>
+            <Button Content="Сохранить сборку" Command="{Binding SaveAssemblyCommand}" Height="30"/>
         </StackPanel>
     </Grid>
 </Window>

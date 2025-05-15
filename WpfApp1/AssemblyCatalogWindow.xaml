@@ -26,11 +26,15 @@
             </ListView.Resources>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="ID" DisplayMemberBinding="{Binding AssemblyID}" Width="50"/>
                     <GridViewColumn Header="Описание" DisplayMemberBinding="{Binding Description}" Width="300"/>
                     <GridViewColumn Header="Оценка" DisplayMemberBinding="{Binding Rating}" Width="80"/>
                     <GridViewColumn Header="Пользователь" Width="150" 
                                     DisplayMemberBinding="{Binding User.Email}"/>
+                    <GridViewColumn Header="Общая стоимость" Width="120">
+                        <GridViewColumn.DisplayMemberBinding>
+                            <Binding Path="TotalPrice" StringFormat="{}{0:C}"/>
+                        </GridViewColumn.DisplayMemberBinding>
+                    </GridViewColumn>
                     <GridViewColumn Header="Компоненты" Width="250">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>

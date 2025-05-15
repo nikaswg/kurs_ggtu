@@ -56,7 +56,7 @@ namespace MyApp.WPF
                 var assemblies = await _dbContext.Assemblies
                     .Include(a => a.User)
                     .Include(a => a.AssemblyComponents)
-                        .ThenInclude(ac => ac.Component)
+                        .ThenInclude(ac => ac.Component) // Убедитесь, что загружаются компоненты
                     .Include(a => a.Reviews)
                         .ThenInclude(r => r.User)
                     .Include(a => a.UserVotes)
@@ -69,6 +69,8 @@ namespace MyApp.WPF
                     foreach (var assembly in assemblies)
                     {
                         Assemblies.Add(assembly);
+                        // Уведомляем об изменении TotalPrice
+                        OnPropertyChanged(nameof(assembly.TotalPrice));
                     }
                 });
             }

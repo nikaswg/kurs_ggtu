@@ -16,20 +16,56 @@ namespace MyApp.BusinessLogic
             _dbContext = new AppDbContext();
         }
 
-        public bool CreateAssembly(string name, string description, List<int> componentIds, int userId, out string errorMessage)
+        public bool CreateAssembly(string description, List<int> componentIds, int userId, out string errorMessage)
         {
             errorMessage = string.Empty;
 
             try
             {
-                // Проверяем, существует ли пользователь
-                var userExists = _dbContext.Users.Any(u => u.NameId == userId);
-                if (!userExists)
+                // Проверяем ограничения на компоненты
+                var componentGroups = _dbContext.Components
+                    .Where(c => componentIds.Contains(c.ComponentID))
+                    .GroupBy(c => c.Category.Name)
+                    .ToList();
+
+                foreach (var group in componentGroups)
                 {
-                    errorMessage = "Пользователь не найден.";
+                    var categoryName = group.Key;
+                    var count = group.Count();
+
+                    bool isValid = categoryName switch
+                    {
+                        "Процессор" => count <= 1,
+                        "Материнская плата" => count <= 1,
+                        "Блок питания" => count <= 1,
+                        "Корпус" => count <= 1,
+                        "Видеокарта" => count <= 2,
+                        "Оперативная память" => count <= 2,
+                        "SSD" or "HDD" => count <= 3,
+                        "Охлаждение" => count <= 1,
+                        _ => true
+                    };
+
+                    if (!isValid)
+                    {
+                        errorMessage = $"Превышено максимальное количество компонентов типа {categoryName}";
+                        return false;
+                    }
+                }
+
+                // Проверяем обязательные компоненты
+                var requiredCategories = new[] { "Процессор", "Материнская плата", "Блок питания", "Корпус" };
+                var missingCategories = requiredCategories
+                    .Except(componentGroups.Select(g => g.Key))
+                    .ToList();
+
+                if (missingCategories.Any())
+                {
+                    errorMessage = $"Отсутствуют обязательные компоненты: {string.Join(", ", missingCategories)}";
                     return false;
                 }
 
+                // Создаем сборку
                 var assembly = new Assembly
                 {
                     Description = description,
@@ -42,14 +78,9 @@ namespace MyApp.BusinessLogic
                 _dbContext.SaveChanges();
                 return true;
             }
-            catch (DbUpdateException ex)
-            {
-                errorMessage = $"Ошибка при сохранении сборки: {ex.InnerException?.Message ?? ex.Message}";
-                return false;
-            }
             catch (Exception ex)
             {
-                errorMessage = $"Непредвиденная ошибка: {ex.Message}";
+                errorMessage = $"Ошибка: {ex.Message}";
                 return false;
             }
         }

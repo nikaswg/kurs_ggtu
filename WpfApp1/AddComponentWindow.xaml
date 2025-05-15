@@ -17,8 +17,12 @@
             <Label Content="Цена:" Margin="0,10,0,0"/>
             <TextBox Text="{Binding NewComponent.Price}"/>
 
-            <Label Content="ID категории:" Margin="0,10,0,0"/>
-            <TextBox Text="{Binding NewComponent.CategoryID}"/>
+            <Label Content="Категория:" Margin="0,10,0,0"/>
+            <ComboBox ItemsSource="{Binding Categories}"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="CategoryID"
+                      SelectedValue="{Binding NewComponent.CategoryID}"
+                      Margin="0,0,0,10"/>
 
             <Button Content="Добавить" Command="{Binding AddCommand}" 
                     Margin="0,20,0,0" Padding="10,5"/>

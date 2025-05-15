@@ -18,13 +18,6 @@ namespace MyApp.WPF
         public ObservableCollection<Component> AvailableComponents { get; set; }
         public ObservableCollection<Component> SelectedComponents { get; set; }
 
-        private string _name;
-        public string Name
-        {
-            get => _name;
-            set { _name = value; OnPropertyChanged(nameof(Name)); }
-        }
-
         private string _description;
         public string Description
         {
@@ -40,7 +33,12 @@ namespace MyApp.WPF
         public Component SelectedAvailable
         {
             get => _selectedAvailable;
-            set { _selectedAvailable = value; OnPropertyChanged(nameof(SelectedAvailable)); }
+            set 
+            { 
+                _selectedAvailable = value; 
+                OnPropertyChanged(nameof(SelectedAvailable));
+                ((RelayCommand)AddComponentCommand).RaiseCanExecuteChanged();
+            }
         }
 
         private Component _selectedInBuild;
@@ -58,31 +56,57 @@ namespace MyApp.WPF
             AvailableComponents = new ObservableCollection<Component>(_componentService.GetAllComponents());
             SelectedComponents = new ObservableCollection<Component>();
 
-            AddComponentCommand = new RelayCommand(AddComponent);
+            AddComponentCommand = new RelayCommand(AddComponent, CanAddComponent);
             RemoveComponentCommand = new RelayCommand(RemoveComponent);
             SaveAssemblyCommand = new RelayCommand(SaveAssembly);
         }
 
+        private bool CanAddComponent()
+        {
+            if (SelectedAvailable == null) return false;
+
+            var componentType = SelectedAvailable.Category?.Name;
+            var selectedCountOfType = SelectedComponents.Count(c => c.Category?.Name == componentType);
+
+            // Определяем максимальное количество для каждого типа
+            int maxCount = componentType switch
+            {
+                "Процессор" => 1,
+                "Материнская плата" => 1,
+                "Блок питания" => 1,
+                "Корпус" => 1,
+                "Видеокарта" => 2,
+                "Оперативная память" => 2,
+                "SSD" or "HDD" => 3,
+                "Охлаждение" => 1,
+                _ => int.MaxValue // Для других типов без ограничений
+            };
+
+            return selectedCountOfType < maxCount;
+        }
+
         private void AddComponent()
         {
-            if (SelectedAvailable != null && !SelectedComponents.Contains(SelectedAvailable))
+            if (SelectedAvailable != null)
+            {
+                // Просто добавляем компонент, даже если такой уже есть
                 SelectedComponents.Add(SelectedAvailable);
+                (AddComponentCommand as RelayCommand)?.RaiseCanExecuteChanged();
+            }
         }
+
 
         private void RemoveComponent()
         {
             if (SelectedInBuild != null)
+            {
                 SelectedComponents.Remove(SelectedInBuild);
+                ((RelayCommand)AddComponentCommand).RaiseCanExecuteChanged();
+            }
         }
 
         private void SaveAssembly()
         {
-            if (string.IsNullOrWhiteSpace(Name))
-            {
-                MessageBox.Show("Введите название сборки.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
             if (string.IsNullOrWhiteSpace(Description))
             {
                 MessageBox.Show("Введите описание сборки.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -95,13 +119,24 @@ namespace MyApp.WPF
                 return;
             }
 
-            if (_assemblyService.CreateAssembly(Name, Description, SelectedComponents.Select(c => c.ComponentID).ToList(), App.NameId, out string errorMessage))
+            // Проверка обязательных компонентов
+            var requiredComponents = new[] { "Процессор", "Материнская плата", "Блок питания", "Корпус" };
+            var missingComponents = requiredComponents
+                .Where(rc => !SelectedComponents.Any(c => c.Category?.Name == rc))
+                .ToList();
+
+            if (missingComponents.Any())
+            {
+                MessageBox.Show($"Отсутствуют обязательные компоненты: {string.Join(", ", missingComponents)}", 
+                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (_assemblyService.CreateAssembly(Description, SelectedComponents.Select(c => c.ComponentID).ToList(), App.NameId, out string errorMessage))
             {
                 MessageBox.Show("Сборка сохранена успешно!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                Name = "";
                 Description = "";
                 SelectedComponents.Clear();
-                OnPropertyChanged(nameof(Name));
                 OnPropertyChanged(nameof(Description));
             }
             else
