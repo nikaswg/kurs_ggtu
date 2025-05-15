@@ -37,6 +37,8 @@ namespace MyApp.DataLayer.Models
 
         public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
+        public virtual ICollection<UserVote> UserVotes { get; set; } = new List<UserVote>();
+
 
 
         public event PropertyChangedEventHandler PropertyChanged;

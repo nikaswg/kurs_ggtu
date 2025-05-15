@@ -13,6 +13,7 @@ namespace MyApp.DataLayer
         public DbSet<User> Users { get; set; }
         public DbSet<Assembly> Assemblies { get; set; }
         public DbSet<AssemblyComponent> AssemblyComponents { get; set; }
+        public DbSet<UserVote> UserVotes { get; set; }
 
         public DbSet<Review> Reviews { get; set; }
 
@@ -26,6 +27,10 @@ namespace MyApp.DataLayer
             modelBuilder.Entity<Assembly>().HasKey(a => a.AssemblyID);
             modelBuilder.Entity<AssemblyComponent>().HasKey(ac => ac.AssemblyComponentID);
             modelBuilder.Entity<Review>().HasKey(ac => ac.ReviewID);
+
+            modelBuilder.Entity<UserVote>()
+                .HasIndex(v => new { v.AssemblyID, v.UserEmail })
+                .IsUnique();
 
             // Связь Review -> Assembly
             modelBuilder.Entity<Review>()
@@ -62,7 +67,7 @@ namespace MyApp.DataLayer
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Укажите строку подключения к вашему SQL Server
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=bdkurs2;Trusted_Connection=True;");
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=bdkurs21;Trusted_Connection=True;");
         }
 
         public List<Component> GetAllComponents()
