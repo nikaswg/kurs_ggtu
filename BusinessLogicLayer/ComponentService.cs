@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using System.Data.Linq;
 using MyApp.DataLayer;
 using MyApp.DataLayer.Models;
-using MyApp;
 
 namespace MyApp.BusinessLogic
 {
@@ -19,55 +18,96 @@ namespace MyApp.BusinessLogic
 
         public List<Component> GetAllComponents()
         {
-            return _dbContext.Components
-                .Include(c => c.Category)
-                .AsNoTracking()
-                .ToList();
+            var loadOptions = new DataLoadOptions();
+            loadOptions.LoadWith<Component>(c => c.Category);
+            _dbContext.LoadOptions = loadOptions;
+
+            return _dbContext.Components.ToList();
         }
 
         public PagedResult<Component> GetComponentsPaged(int pageNumber, int pageSize)
         {
-            var components = _dbContext.Components
-                .Include(c => c.Category)
-                .AsNoTracking()
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-            var totalCount = _dbContext.Components.Count();
-
-            return new PagedResult<Component>
+            using (var dbContext = new AppDbContext())
             {
-                Results = components,
-                TotalCount = totalCount,
-                PageNumber = pageNumber,
-                PageSize = pageSize
-            };
+                var loadOptions = new DataLoadOptions();
+                loadOptions.LoadWith<Component>(c => c.Category);
+                dbContext.LoadOptions = loadOptions;
+
+                var query = dbContext.Components;
+                var totalCount = query.Count();
+
+                var components = query
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+                return new PagedResult<Component>
+                {
+                    Results = components,
+                    TotalCount = totalCount,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                };
+            }
         }
 
-        public List<Component> SearchComponents(string searchText, decimal? minPrice = null, decimal? maxPrice = null, bool exactMatch = false)
+        public List<Component> SearchComponents(string searchText = null, decimal? minPrice = null, decimal? maxPrice = null, bool exactMatch = false)
         {
-            var query = _dbContext.Components.Include(c => c.Category).AsNoTracking();
+            var loadOptions = new DataLoadOptions();
+            loadOptions.LoadWith<Component>(c => c.Category);
+            _dbContext.LoadOptions = loadOptions;
 
+            var query = _dbContext.Components.AsQueryable();
 
-
-            // Фильтрация по цене
-            if (minPrice.HasValue)
+            if (!string.IsNullOrEmpty(searchText))
             {
-                query = query.Where(c => c.Price >= minPrice.Value);
+                query = exactMatch
+                    ? query.Where(c => c.Name == searchText || c.Description == searchText)
+                    : query.Where(c => c.Name.Contains(searchText) || c.Description.Contains(searchText));
             }
 
+            if (minPrice.HasValue)
+                query = query.Where(c => c.Price >= minPrice.Value);
+
             if (maxPrice.HasValue)
-            {
                 query = query.Where(c => c.Price <= maxPrice.Value);
+
+            return query.ToList();
+        }
+
+        public List<Component> SearchByName(string name, bool exactMatch = false)
+        {
+            var loadOptions = new DataLoadOptions();
+            loadOptions.LoadWith<Component>(c => c.Category);
+            _dbContext.LoadOptions = loadOptions;
+
+            var query = _dbContext.Components.AsQueryable();
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = exactMatch
+                    ? query.Where(c => c.Name == name)
+                    : query.Where(c => c.Name.Contains(name));
             }
 
             return query.ToList();
         }
 
-        public List<Component> FilterComponents(decimal? minPrice, decimal? maxPrice)
+        public List<Component> FilterByPrice(decimal? minPrice, decimal? maxPrice)
         {
-            return SearchComponents(null, minPrice, maxPrice);
+            var loadOptions = new DataLoadOptions();
+            loadOptions.LoadWith<Component>(c => c.Category);
+            _dbContext.LoadOptions = loadOptions;
+
+            var query = _dbContext.Components.AsQueryable();
+
+            if (minPrice.HasValue)
+                query = query.Where(c => c.Price >= minPrice.Value);
+
+            if (maxPrice.HasValue)
+                query = query.Where(c => c.Price <= maxPrice.Value);
+
+            return query.ToList();
         }
 
         public List<Component> SortComponents(List<Component> components, string sortField, ref int sortDirection)
@@ -76,13 +116,13 @@ namespace MyApp.BusinessLogic
             {
                 case "Name":
                     components = sortDirection == 1
-                        ? components.OrderBy(c => c.Name.Length).ToList()
-                        : components.OrderByDescending(c => c.Name.Length).ToList();
+                        ? components.OrderBy(c => c.Name).ToList()
+                        : components.OrderByDescending(c => c.Name).ToList();
                     break;
                 case "Description":
                     components = sortDirection == 1
-                        ? components.OrderBy(c => c.Description.Length).ToList()
-                        : components.OrderByDescending(c => c.Description.Length).ToList();
+                        ? components.OrderBy(c => c.Description).ToList()
+                        : components.OrderByDescending(c => c.Description).ToList();
                     break;
                 case "Price":
                     components = sortDirection == 1
@@ -91,13 +131,12 @@ namespace MyApp.BusinessLogic
                     break;
                 case "Category.Name":
                     components = sortDirection == 1
-                        ? components.OrderBy(c => c.Category?.Name?.Length ?? 0).ToList()
-                        : components.OrderByDescending(c => c.Category?.Name?.Length ?? 0).ToList();
+                        ? components.OrderBy(c => c.Category?.Name ?? "").ToList()
+                        : components.OrderByDescending(c => c.Category?.Name ?? "").ToList();
                     break;
             }
 
             sortDirection = sortDirection == 0 ? 1 : (sortDirection == 1 ? -1 : 0);
-
             return sortDirection == 0 ? components.OrderBy(c => c.ComponentID).ToList() : components;
         }
 
@@ -106,8 +145,8 @@ namespace MyApp.BusinessLogic
             if (currentUserRole != "Admin")
                 throw new UnauthorizedAccessException("Only admins can add components");
 
-            _dbContext.Components.Add(component);
-            _dbContext.SaveChanges();
+            _dbContext.Components.InsertOnSubmit(component);
+            _dbContext.SubmitChanges();
         }
 
         public void AddSimpleComponent(string name, string description, decimal price, string currentUserRole)
@@ -123,36 +162,22 @@ namespace MyApp.BusinessLogic
                 CategoryID = 0
             };
 
-            _dbContext.Components.Add(component);
-            _dbContext.SaveChanges();
-        }
-
-        public List<Component> SearchComponentsByName(string name, bool exactMatch = false)
-        {
-            var query = _dbContext.Components.Include(c => c.Category).AsNoTracking();
-
-            if (!string.IsNullOrWhiteSpace(name))
-            {
-                if (exactMatch)
-                {
-                    query = query.Where(c => c.Name == name);
-                }
-                else
-                {
-                    query = query.Where(c => c.Name.Contains(name));
-                }
-            }
-
-            return query.ToList();
+            _dbContext.Components.InsertOnSubmit(component);
+            _dbContext.SubmitChanges();
         }
 
         public void UpdateComponent(Component component)
         {
-            var existingComponent = _dbContext.Components.Find(component.ComponentID);
+            var existingComponent = _dbContext.Components
+                .FirstOrDefault(c => c.ComponentID == component.ComponentID);
+
             if (existingComponent != null)
             {
-                _dbContext.Entry(existingComponent).CurrentValues.SetValues(component);
-                _dbContext.SaveChanges();
+                existingComponent.Name = component.Name;
+                existingComponent.Description = component.Description;
+                existingComponent.Price = component.Price;
+                existingComponent.CategoryID = component.CategoryID;
+                _dbContext.SubmitChanges();
             }
         }
 

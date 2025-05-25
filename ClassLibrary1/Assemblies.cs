@@ -1,28 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System.Data.Linq.Mapping;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
+using System.Data.Linq;
 using System.Linq;
 
 namespace MyApp.DataLayer.Models
 {
+    [Table(Name = "Assemblies")]
     public class Assembly : INotifyPropertyChanged
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public int AssemblyID { get; set; }
 
-        [Required]
+        [Column]
         public int NameId { get; set; }
 
-        [ForeignKey("NameId")]
-        public User User { get; set; }
-
-        [Required]
-        [StringLength(300)]
+        [Column]
         public string Description { get; set; }
 
         private decimal _rating;
+        [Column]
         public decimal Rating
         {
             get => _rating;
@@ -33,7 +30,18 @@ namespace MyApp.DataLayer.Models
             }
         }
 
-        [NotMapped] // Это поле не будет сохраняться в БД
+        [Association(Storage = "_User", ThisKey = "NameId", OtherKey = "NameId")]
+        public User User { get; set; }
+
+        [Association(Storage = "_AssemblyComponents", OtherKey = "AssemblyID")]
+        public EntitySet<AssemblyComponent> AssemblyComponents { get; set; }
+
+        [Association(Storage = "_Reviews", OtherKey = "AssemblyID")]
+        public EntitySet<Review> Reviews { get; set; }
+
+        [Association(Storage = "_UserVotes", OtherKey = "AssemblyID")]
+        public EntitySet<UserVote> UserVotes { get; set; }
+
         public decimal TotalPrice
         {
             get
@@ -43,34 +51,29 @@ namespace MyApp.DataLayer.Models
             }
         }
 
-        public ICollection<AssemblyComponent> AssemblyComponents { get; set; }
-
-        public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
-
-        public virtual ICollection<UserVote> UserVotes { get; set; } = new List<UserVote>();
-
-
-
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName) =>
+        public void OnPropertyChanged(string propertyName)
+        {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 
+    [Table(Name = "AssemblyComponents")]
     public class AssemblyComponent
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public int AssemblyComponentID { get; set; }
 
+        [Column]
         public int AssemblyID { get; set; }
+
+        [Column]
         public int ComponentID { get; set; }
 
-        [ForeignKey("AssemblyID")]
+        [Association(Storage = "_Assembly", ThisKey = "AssemblyID", OtherKey = "AssemblyID")]
         public Assembly Assembly { get; set; }
 
-        [ForeignKey("ComponentID")]
+        [Association(Storage = "_Component", ThisKey = "ComponentID", OtherKey = "ComponentID")]
         public Component Component { get; set; }
     }
-
-
 }

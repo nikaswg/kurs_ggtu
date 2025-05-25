@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using MyApp.BusinessLogicLayer.Services;
+using MyApp.DataLayer;
 using WpfApp1;
 
 namespace MyApp
@@ -12,7 +13,8 @@ namespace MyApp
         public LoginWindow()
         {
             InitializeComponent();
-            _userService = new UserService();
+            var dbContext = new AppDbContext();
+            _userService = new UserService(dbContext);
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)

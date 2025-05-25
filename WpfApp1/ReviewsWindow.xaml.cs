@@ -73,8 +73,8 @@ namespace MyApp.WPF
                 };
 
                 // Добавляем отзыв
-                _dbContext.Reviews.Add(review);
-                _dbContext.SaveChanges();
+                _dbContext.Reviews.InsertOnSubmit(review);
+                _dbContext.SubmitChanges();
 
                 // Обновляем список отзывов
 

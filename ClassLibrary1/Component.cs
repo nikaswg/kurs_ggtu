@@ -1,33 +1,56 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Data.Linq;
+using System.Data.Linq.Mapping;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyApp.DataLayer.Models
 {
-    [Table("Components")] // Укажите имя таблицы, если оно отличается от имени класса
-    public class Component
+    [System.Data.Linq.Mapping.Table(Name = "Components")]
+    public class Component : INotifyPropertyChanged
     {
-        [Key] // Указывает, что это первичный ключ
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Указывает, что ключ генерируется базой данных
+        // Объявляем поле для хранения связи с категорией
+        private EntityRef<Category> _categoryRef;
+
+        // Конструктор должен инициализировать EntityRef
+        public Component()
+        {
+            _categoryRef = new EntityRef<Category>();
+        }
+
+        [System.Data.Linq.Mapping.Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public int ComponentID { get; set; }
 
-        [Required] // Указывает, что поле обязательно для заполнения
-        [StringLength(100)] // Ограничение на длину строки
+        [System.Data.Linq.Mapping.Column]
         public string Name { get; set; }
 
-        [StringLength(150)]
+        [System.Data.Linq.Mapping.Column]
         public string Description { get; set; }
 
-        [Column(TypeName = "decimal(18,2)")] // Добавьте эту аннотацию
+        [System.Data.Linq.Mapping.Column]
         public decimal Price { get; set; }
 
+        [System.Data.Linq.Mapping.Column]
         public int CategoryID { get; set; }
 
-        [ForeignKey("CategoryID")] // Указывает, что это внешний ключ
-        public Category Category { get; set; } // Навигационное свойство
-
-        [NotMapped]
-        public string NameWithCategory => $"{Name} ({Category?.Name})";
+        [Association(Name = "Component_Category", Storage = "_categoryRef",
+                    ThisKey = "CategoryID", OtherKey = "CategoryID", IsForeignKey = true)]
+        public Category Category
+        {
+            get { return _categoryRef.Entity; }
+            set
+            {
+                var previousValue = _categoryRef.Entity;
+                if (previousValue != value || !_categoryRef.HasLoadedOrAssignedValue)
+                {
+                    _categoryRef.Entity = value;
+                    if (value != null)
+                    {
+                        CategoryID = value.CategoryID;
+                    }
+                    OnPropertyChanged(nameof(Category));
+                }
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName) =>

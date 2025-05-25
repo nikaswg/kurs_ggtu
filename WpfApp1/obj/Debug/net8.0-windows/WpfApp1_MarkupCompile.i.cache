@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\Nikita\Downloads\kurs_ggtu\WpfApp1\obj\Debug\net8.0-windows\
+C:\Users\Никита\Downloads\kurs_ggtu\WpfApp1\obj\Debug\net8.0-windows\
 WpfApp1
 none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
-C:\Users\Nikita\Downloads\kurs_ggtu\WpfApp1\App.xaml
+C:\Users\Никита\Downloads\kurs_ggtu\WpfApp1\App.xaml
 91741136710
 
 201770432023
-2331525994759
+2341733979600
 AddComponentWindow.xaml;AssemblyBuilderWindow.xaml;AssemblyCatalogWindow.xaml;ComponentListPage.xaml;EditComponentWindow.xaml;LoginWindow.xaml;MainWindow.xaml;RegisterWindow.xaml;ReviewsWindow.xaml;
 
 True

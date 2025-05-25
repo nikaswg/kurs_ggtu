@@ -1,17 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel;
+using System.Data.Linq.Mapping;
 
-namespace MyApp.DataLayer.Models
+[Table(Name = "Category")]
+public class Category : INotifyPropertyChanged
 {
-    [Table("Category")] // Укажите имя таблицы, если оно отличается от имени класса
-    public class Category
-    {
-        [Key] // Указывает, что это первичный ключ
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Указывает, что ключ генерируется базой данных
-        public int CategoryID { get; set; }
+    [Column(IsPrimaryKey = true, IsDbGenerated = true)]
+    public int CategoryID { get; set; }
 
-        [Required] // Указывает, что поле обязательно для заполнения
-        [StringLength(50)] // Ограничение на длину строки
-        public string Name { get; set; }
-    }
+    [Column]
+    public string Name { get; set; }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected void OnPropertyChanged(string propertyName) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }

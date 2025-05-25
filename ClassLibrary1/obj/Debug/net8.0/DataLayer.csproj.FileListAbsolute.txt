@@ -40,3 +40,5 @@ C:\Users\Nikita\Downloads\kurs_ggtu-main\ClassLibrary1\obj\Debug\net8.0\refint\D
 C:\Users\Nikita\Downloads\kurs_ggtu-main\ClassLibrary1\obj\Debug\net8.0\DataLayer.pdb
 C:\Users\Nikita\Downloads\kurs_ggtu-main\ClassLibrary1\obj\Debug\net8.0\DataLayer.genruntimeconfig.cache
 C:\Users\Nikita\Downloads\kurs_ggtu-main\ClassLibrary1\obj\Debug\net8.0\ref\DataLayer.dll
+C:\Users\Никита\Downloads\kurs_ggtu\ClassLibrary1\bin\Debug\net8.0\DataLayer.runtimeconfig.json
+C:\Users\Никита\Downloads\kurs_ggtu\ClassLibrary1\obj\Debug\net8.0\DataLayer.genruntimeconfig.cache

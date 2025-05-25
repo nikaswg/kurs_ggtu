@@ -70,12 +70,24 @@ namespace MyApp.BusinessLogic
                 {
                     Description = description,
                     NameId = userId,
-                    Rating = 0,
-                    AssemblyComponents = componentIds.Select(compId => new AssemblyComponent { ComponentID = compId }).ToList()
+                    Rating = 0
                 };
 
-                _dbContext.Assemblies.Add(assembly);
-                _dbContext.SaveChanges();
+                // Добавляем сборку в контекст
+                _dbContext.Assemblies.InsertOnSubmit(assembly);
+                _dbContext.SubmitChanges(); // Сохраняем, чтобы получить AssemblyID
+
+                // Создаем связи с компонентами
+                var assemblyComponents = componentIds.Select(compId => new AssemblyComponent
+                {
+                    AssemblyID = assembly.AssemblyID,
+                    ComponentID = compId
+                }).ToList();
+
+                // Добавляем связи компонентов
+                _dbContext.AssemblyComponents.InsertAllOnSubmit(assemblyComponents);
+                _dbContext.SubmitChanges();
+
                 return true;
             }
             catch (Exception ex)

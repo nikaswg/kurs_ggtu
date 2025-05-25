@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using MyApp.DataLayer.Models;
-using MyApp.DataLayer;
+﻿using MyApp.DataLayer;
+using System.Security.Authentication;
+
 
 namespace MyApp.BusinessLogicLayer.Services
 {
@@ -10,73 +8,59 @@ namespace MyApp.BusinessLogicLayer.Services
     {
         private readonly AppDbContext _dbContext;
 
-        public UserService()
+        public UserService(AppDbContext dbContext)
         {
-            _dbContext = new AppDbContext();
+            _dbContext = dbContext;
         }
+
+
 
         public User Authenticate(string email, string password)
         {
-            var user = _dbContext.GetUsers().FirstOrDefault(u => u.Email == email);
-            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
+            // Проверка ввода
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentException("Введите email");
+            if (string.IsNullOrWhiteSpace(password))
+                throw new ArgumentException("Введите пароль");
+
+            // Используем String.Compare без StringComparison
+            var user = _dbContext.Users
+                       .AsEnumerable() // Переключаемся на LINQ to Objects
+                       .FirstOrDefault(u =>
+                           string.Compare(u.Email, email.Trim(), ignoreCase: true) == 0);
+
+            if (user == null)
+                throw new InvalidOperationException("Пользователь не найден");
+
+            // Проверка пароля
+            if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
             {
-                return user;
+                throw new InvalidOperationException("Неверный пароль");
             }
-            return null;
+
+            return user;
         }
 
         public void Register(string name, string email, string password)
         {
-            string[] support_mass =
-            {
-               name,
-               email,
-               password,
-               "имя",
-               "почта",
-               "пароль",
-            };
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Имя не может быть пустым");
 
-            string support_message = "";
-            int emptyCount = support_mass.Count(s => string.IsNullOrEmpty(s));
+            if (string.IsNullOrWhiteSpace(email) || !email.Contains('@'))
+                throw new ArgumentException("Неверный формат email");
 
-            if (emptyCount > 0)
-            {
-                support_message = emptyCount == 1 ? "Поле " : "Поля: ";
+            if (string.IsNullOrWhiteSpace(password) || password.Length < 8)
+                throw new ArgumentException("Пароль должен содержать минимум 8 символов");
 
-                for (int i = 0; i < 3; i++)
-                {
-                    if (string.IsNullOrEmpty(support_mass[i]))
-                    {
-                        support_message += support_mass[i + 3] + ", ";
-                    }
-                }
-
-                // Убираем последнюю запятую и пробел
-                if (support_message.EndsWith(", "))
-                {
-                    support_message = support_message.Remove(support_message.Length - 2);
-                }
-
-                support_message += emptyCount == 1 ? " пустое. Заполните его." : " пустые. Заполните их.";
-                throw new Exception(support_message);
-            }
-
-            if (!email.Contains('@'))
-                throw new Exception("У электронной почты должен присутствовать символ '@'.");
-
-            if (_dbContext.GetUsers().Any(u => u.Email == email))
-                throw new Exception("Пользователь с таким email уже существует.");
-
-            if (password.Length < 8)
-                throw new Exception("Пароль должен содержать минимум 8 символов.");
+            if (_dbContext.Users.Any(u => u.Email == email))
+                throw new InvalidOperationException("Пользователь с таким email уже существует");
 
             var newUser = new User
             {
-                Name = name,
-                Email = email,
+                Name = name.Trim(),
+                Email = email.Trim(),
                 Password = BCrypt.Net.BCrypt.HashPassword(password),
-                Role = "User",
+                Role = "User"
             };
 
             _dbContext.AddUser(newUser);

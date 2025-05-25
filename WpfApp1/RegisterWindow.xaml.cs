@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using MyApp.BusinessLogicLayer.Services;
+using MyApp.DataLayer;
 
 namespace MyApp
 {
@@ -11,7 +12,8 @@ namespace MyApp
         public RegisterWindow()
         {
             InitializeComponent();
-            _userService = new UserService();
+            var dbContext = new AppDbContext();
+            _userService = new UserService(dbContext);
         }
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)

@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using MyApp.BusinessLogic;
-using System.Linq;
-using Component = MyApp.DataLayer.Models.Component;
 using WpfApp1;
-using System.Windows;
+using DataComponent = MyApp.DataLayer.Models.Component; // Алиас для устранения неоднозначности
 
 namespace MyApp.WPF
 {
     public class ComponentListViewModel : INotifyPropertyChanged
     {
         private readonly ComponentService _componentService;
-        private ObservableCollection<Component> _components;
+        private ObservableCollection<DataComponent> _components;
         private string _searchText;
         private string _nameSearchText;
         private decimal? _minPrice;
@@ -22,7 +22,8 @@ namespace MyApp.WPF
         private int _currentPage = 1;
         private int _pageSize = 10;
         private int _totalCount;
-        private Component _selectedComponent;
+        private DataComponent _selectedComponent;
+        private bool _exactMatch;
         private Dictionary<string, int> _sortStates = new Dictionary<string, int>
         {
             {"Name", 0},
@@ -30,27 +31,29 @@ namespace MyApp.WPF
             {"Price", 0},
             {"Category.Name", 0}
         };
-        private bool _exactMatch;
 
         public ComponentListViewModel()
         {
             _componentService = new ComponentService();
             LoadComponents();
+
+            // Инициализация команд
             SearchCommand = new RelayCommand(Search);
-            FilterCommand = new RelayCommand(Filter);
             NameSearchCommand = new RelayCommand(NameSearch);
             ResetNameSearchCommand = new RelayCommand(ResetNameSearch);
+            FilterCommand = new RelayCommand(Filter);
             ResetFilterCommand = new RelayCommand(ResetFilter);
             NextPageCommand = new RelayCommand(NextPage, CanGoNextPage);
             PreviousPageCommand = new RelayCommand(PreviousPage, CanGoPreviousPage);
             ShowAddWindowCommand = new RelayCommand(ShowAddWindow, () => App.Role == "Admin");
-            EditComponentCommand = new RelayCommand<Component>(EditComponent, c => App.Role == "Admin");
+            EditComponentCommand = new RelayCommand<DataComponent>(EditComponent, c => App.Role == "Admin");
             SortCommand = new RelayCommand<string>(Sort);
         }
 
-        public ObservableCollection<Component> Components
+        // Свойства
+        public ObservableCollection<DataComponent> Components
         {
-            get { return _components; }
+            get => _components;
             set
             {
                 _components = value;
@@ -58,9 +61,9 @@ namespace MyApp.WPF
             }
         }
 
-        public Component SelectedComponent
+        public DataComponent SelectedComponent
         {
-            get { return _selectedComponent; }
+            get => _selectedComponent;
             set
             {
                 _selectedComponent = value;
@@ -70,7 +73,7 @@ namespace MyApp.WPF
 
         public string SearchText
         {
-            get { return _searchText; }
+            get => _searchText;
             set
             {
                 _searchText = value;
@@ -80,7 +83,7 @@ namespace MyApp.WPF
 
         public string NameSearchText
         {
-            get { return _nameSearchText; }
+            get => _nameSearchText;
             set
             {
                 _nameSearchText = value;
@@ -90,7 +93,7 @@ namespace MyApp.WPF
 
         public decimal? MinPrice
         {
-            get { return _minPrice; }
+            get => _minPrice;
             set
             {
                 _minPrice = value;
@@ -100,7 +103,7 @@ namespace MyApp.WPF
 
         public decimal? MaxPrice
         {
-            get { return _maxPrice; }
+            get => _maxPrice;
             set
             {
                 _maxPrice = value;
@@ -118,6 +121,13 @@ namespace MyApp.WPF
             }
         }
 
+        public bool HasPreviousPage => _currentPage > 1;
+        public bool HasNextPage => _currentPage < TotalPages;
+        public int TotalPages => (int)Math.Ceiling((double)_totalCount / _pageSize);
+        public string PageInfo => $"Страница {_currentPage} из {TotalPages}";
+        public bool IsAdmin => App.Role == "Admin";
+
+        // Команды
         public ICommand SearchCommand { get; }
         public ICommand NameSearchCommand { get; }
         public ICommand ResetNameSearchCommand { get; }
@@ -129,21 +139,13 @@ namespace MyApp.WPF
         public ICommand EditComponentCommand { get; }
         public ICommand SortCommand { get; }
 
-        public bool HasPreviousPage => _currentPage > 1;
-        public bool HasNextPage => _currentPage < TotalPages;
-        public int TotalPages => (int)Math.Ceiling((double)_totalCount / _pageSize);
-        public string PageInfo => $"Страница {_currentPage} из {TotalPages}";
-        public bool IsAdmin => App.Role == "Admin";
-
+        // Методы
         private void LoadComponents()
         {
             var pagedResult = _componentService.GetComponentsPaged(_currentPage, _pageSize);
-            Components = new ObservableCollection<Component>(pagedResult.Results);
+            Components = new ObservableCollection<DataComponent>(pagedResult.Results);
             _totalCount = pagedResult.TotalCount;
-            OnPropertyChanged(nameof(HasPreviousPage));
-            OnPropertyChanged(nameof(HasNextPage));
-            OnPropertyChanged(nameof(PageInfo));
-            OnPropertyChanged(nameof(IsAdmin));
+            UpdatePaginationProperties();
         }
 
         private void Search()
@@ -151,25 +153,24 @@ namespace MyApp.WPF
             try
             {
                 var results = _componentService.SearchComponents(
-                    SearchText,
-                    MinPrice,
-                    MaxPrice,
-                    ExactMatch);
+                    searchText: SearchText,
+                    minPrice: MinPrice,
+                    maxPrice: MaxPrice,
+                    exactMatch: ExactMatch);
 
-                Components = new ObservableCollection<Component>(results);
-                
+                Components = new ObservableCollection<DataComponent>(results);
+                ResetSortStates();
+
                 if (!results.Any())
                 {
                     MessageBox.Show("Ничего не найдено", "Результаты поиска",
-                                    MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-
-                ResetSortStates();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка поиска: {ex.Message}", "Ошибка",
-                                 MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -177,24 +178,23 @@ namespace MyApp.WPF
         {
             try
             {
-                var results = _componentService.SearchComponentsByName(
-                    NameSearchText,
-                    ExactMatch);
+                var results = _componentService.SearchByName(
+                    name: NameSearchText,
+                    exactMatch: ExactMatch);
 
-                Components = new ObservableCollection<Component>(results);
-                
+                Components = new ObservableCollection<DataComponent>(results);
+                ResetSortStates();
+
                 if (!results.Any())
                 {
                     MessageBox.Show("Ничего не найдено", "Результаты поиска",
-                                    MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-
-                ResetSortStates();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка поиска: {ex.Message}", "Ошибка",
-                                 MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -206,8 +206,11 @@ namespace MyApp.WPF
 
         private void Filter()
         {
-            var results = _componentService.FilterComponents(MinPrice, MaxPrice);
-            Components = new ObservableCollection<Component>(results);
+            var results = _componentService.SearchComponents(
+                minPrice: MinPrice,
+                maxPrice: MaxPrice);
+
+            Components = new ObservableCollection<DataComponent>(results);
             ResetSortStates();
         }
 
@@ -221,10 +224,14 @@ namespace MyApp.WPF
         private void Sort(string field)
         {
             var direction = _sortStates[field];
-            var sortedList = _componentService.SortComponents(Components.ToList(), field, ref direction);
-            _sortStates[field] = direction;
+            var componentsList = Components.ToList();
+            var sortedList = _componentService.SortComponents(
+                components: componentsList,
+                sortField: field,
+                sortDirection: ref direction);
 
-            Components = new ObservableCollection<Component>(sortedList);
+            _sortStates[field] = direction;
+            Components = new ObservableCollection<DataComponent>(sortedList);
         }
 
         private void ResetSortStates()
@@ -241,10 +248,7 @@ namespace MyApp.WPF
             LoadComponents();
         }
 
-        private bool CanGoNextPage()
-        {
-            return _currentPage < TotalPages;
-        }
+        private bool CanGoNextPage() => _currentPage < TotalPages;
 
         private void PreviousPage()
         {
@@ -252,10 +256,7 @@ namespace MyApp.WPF
             LoadComponents();
         }
 
-        private bool CanGoPreviousPage()
-        {
-            return _currentPage > 1;
-        }
+        private bool CanGoPreviousPage() => _currentPage > 1;
 
         private void ShowAddWindow()
         {
@@ -265,12 +266,13 @@ namespace MyApp.WPF
             LoadComponents();
         }
 
-        private void EditComponent(Component component)
+        private void EditComponent(DataComponent component)
         {
             if (component == null) return;
 
             var editViewModel = new EditComponentViewModel(component);
             var editWindow = new EditComponentWindow(editViewModel);
+
             if (editWindow.ShowDialog() == true)
             {
                 _componentService.UpdateComponent(component);
@@ -278,17 +280,30 @@ namespace MyApp.WPF
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        private void UpdatePaginationProperties()
+        {
+            OnPropertyChanged(nameof(HasPreviousPage));
+            OnPropertyChanged(nameof(HasNextPage));
+            OnPropertyChanged(nameof(PageInfo));
+        }
 
+        public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        // Классы команд
         public class RelayCommand : ICommand
         {
             private readonly Action _execute;
             private readonly Func<bool> _canExecute;
+
+            public event EventHandler CanExecuteChanged
+            {
+                add => CommandManager.RequerySuggested += value;
+                remove => CommandManager.RequerySuggested -= value;
+            }
 
             public RelayCommand(Action execute, Func<bool> canExecute = null)
             {
@@ -296,21 +311,8 @@ namespace MyApp.WPF
                 _canExecute = canExecute;
             }
 
-            public bool CanExecute(object parameter)
-            {
-                return _canExecute == null || _canExecute();
-            }
-
-            public void Execute(object parameter)
-            {
-                _execute();
-            }
-
-            public event EventHandler CanExecuteChanged
-            {
-                add { CommandManager.RequerySuggested += value; }
-                remove { CommandManager.RequerySuggested -= value; }
-            }
+            public bool CanExecute(object parameter) => _canExecute?.Invoke() ?? true;
+            public void Execute(object parameter) => _execute();
         }
 
         public class RelayCommand<T> : ICommand
@@ -318,27 +320,20 @@ namespace MyApp.WPF
             private readonly Action<T> _execute;
             private readonly Func<T, bool> _canExecute;
 
+            public event EventHandler CanExecuteChanged
+            {
+                add => CommandManager.RequerySuggested += value;
+                remove => CommandManager.RequerySuggested -= value;
+            }
+
             public RelayCommand(Action<T> execute, Func<T, bool> canExecute = null)
             {
                 _execute = execute ?? throw new ArgumentNullException(nameof(execute));
                 _canExecute = canExecute;
             }
 
-            public bool CanExecute(object parameter)
-            {
-                return _canExecute == null || _canExecute((T)parameter);
-            }
-
-            public void Execute(object parameter)
-            {
-                _execute((T)parameter);
-            }
-
-            public event EventHandler CanExecuteChanged
-            {
-                add { CommandManager.RequerySuggested += value; }
-                remove { CommandManager.RequerySuggested -= value; }
-            }
+            public bool CanExecute(object parameter) => _canExecute?.Invoke((T)parameter) ?? true;
+            public void Execute(object parameter) => _execute((T)parameter);
         }
     }
 }

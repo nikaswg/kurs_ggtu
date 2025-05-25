@@ -1,34 +1,101 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel;
+using System.Data.Linq;
+using System.Data.Linq.Mapping;
+using System.Runtime.CompilerServices;
+using MyApp.DataLayer.Models;
 
-namespace MyApp.DataLayer.Models
+
+[Table(Name = "Reviews")]
+public class Review : INotifyPropertyChanged
 {
-    [Table("Reviews")] // Укажите имя таблицы, если оно отличается от имени класса
-    public class Review
+    private EntityRef<User> _user = new EntityRef<User>();
+    private EntityRef<Assembly> _assembly = new EntityRef<Assembly>();
+    private int _reviewId;
+    private int _assemblyId;
+    private int _nameId;
+    private decimal _rating;
+    private string _comment;
+
+    [Column(IsPrimaryKey = true, IsDbGenerated = true)]
+    public int ReviewID
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ReviewID { get; set; }
+        get => _reviewId;
+        set
+        {
+            _reviewId = value;
+            OnPropertyChanged();
+        }
+    }
 
-        [Required]
-        public int AssemblyID { get; set; }
+    [Column]
+    public int AssemblyID
+    {
+        get => _assemblyId;
+        set
+        {
+            _assemblyId = value;
+            OnPropertyChanged();
+        }
+    }
 
-        [ForeignKey("AssemblyID")]
-        public virtual Assembly Assembly { get; set; }
-        [Required]
-        public int NameID { get; set; } // Связь с Users (не nullable)
+    [Column]
+    public int NameID
+    {
+        get => _nameId;
+        set
+        {
+            _nameId = value;
+            OnPropertyChanged();
+        }
+    }
 
-        [ForeignKey("NameID")]
-        public virtual User User { get; set; }
+    [Column]
+    public decimal Rating
+    {
+        get => _rating;
+        set
+        {
+            _rating = value;
+            OnPropertyChanged();
+        }
+    }
 
-        [Required]
-        [Column(TypeName = "decimal(18,0)")]
-        public decimal Rating { get; set; }
+    [Column]
+    public string Comment
+    {
+        get => _comment;
+        set
+        {
+            _comment = value;
+            OnPropertyChanged();
+        }
+    }
 
-        [StringLength(100)]
-        public string Comment { get; set; }
+    [Association(Storage = "_user", ThisKey = "NameID", OtherKey = "NameId", IsForeignKey = true)]
+    public User User
+    {
+        get => _user.Entity;
+        set
+        {
+            _user.Entity = value;
+            OnPropertyChanged();
+        }
+    }
 
-        [NotMapped]
-        public string UserEmail => User?.Email ?? "Guest";
+    [Association(Storage = "_assembly", ThisKey = "AssemblyID", OtherKey = "AssemblyID", IsForeignKey = true)]
+    public Assembly Assembly
+    {
+        get => _assembly.Entity;
+        set
+        {
+            _assembly.Entity = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

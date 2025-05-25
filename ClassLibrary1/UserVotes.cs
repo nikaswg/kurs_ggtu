@@ -1,20 +1,23 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Data.Linq.Mapping;
 
 namespace MyApp.DataLayer.Models
 {
-    [Table("UserVotes")]
+    [Table(Name = "UserVotes")]
     public class UserVote
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public int VoteID { get; set; }
 
+        [Column]
         public int AssemblyID { get; set; }
+
+        [Column]
         public string UserEmail { get; set; }
+
+        [Column]
         public int VoteType { get; set; }
 
-        [ForeignKey("AssemblyID")]
+        [Association(Storage = "_Assembly", ThisKey = "AssemblyID", OtherKey = "AssemblyID")]
         public Assembly Assembly { get; set; }
     }
 }
