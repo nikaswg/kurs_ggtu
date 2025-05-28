@@ -5,10 +5,9 @@ using System.Data.Linq;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using Microsoft.EntityFrameworkCore;
+
 using MyApp.DataLayer;
 using MyApp.DataLayer.Models;
-using static MyApp.WPF.ComponentListViewModel;
 
 namespace MyApp.WPF
 {
@@ -22,7 +21,7 @@ namespace MyApp.WPF
         public string CurrentUserEmail => string.IsNullOrEmpty(App.Email) ? "Guest" : App.Email;
 
         public ICommand LikeAssemblyCommand { get; private set; }
-        public ICommand DislikeAssemblyCommand { get; private set;  }
+        public ICommand DislikeAssemblyCommand { get; private set; }
         public ICommand DeleteAssemblyCommand { get; private set; }
         public ICommand ShowReviewsCommand { get; private set; }
         public ICommand SortByRatingCommand { get; private set; }
@@ -39,7 +38,7 @@ namespace MyApp.WPF
             LoadAssemblies();
         }
 
-        public void InitializeCommands()
+        private void InitializeCommands()
         {
             LikeAssemblyCommand = new RelayCommand<int>(LikeAssembly);
             DislikeAssemblyCommand = new RelayCommand<int>(DislikeAssembly);
@@ -50,11 +49,10 @@ namespace MyApp.WPF
             CloseCommand = new RelayCommand(CloseWindow);
         }
 
-        private void LoadAssemblies() // Убрали async, так как LINQ to SQL не поддерживает асинхронные операции
+        private void LoadAssemblies()
         {
             try
             {
-                // Настраиваем загрузку связанных данных
                 var loadOptions = new DataLoadOptions();
                 loadOptions.LoadWith<Assembly>(a => a.User);
                 loadOptions.LoadWith<Assembly>(a => a.AssemblyComponents);
@@ -63,31 +61,26 @@ namespace MyApp.WPF
                 loadOptions.LoadWith<Review>(r => r.User);
                 loadOptions.LoadWith<Assembly>(a => a.UserVotes);
 
-                _dbContext.LoadOptions = loadOptions;
-
-                // Получаем данные
-                var assemblies = _dbContext.Assemblies.ToList();
-
-                Application.Current.Dispatcher.Invoke(() =>
+                using (var context = new AppDbContext())
                 {
-                    Assemblies.Clear();
-                    foreach (var assembly in assemblies)
-                    {
-                        // Для каждого Assembly вручную вычисляем TotalPrice
-                        assembly.OnPropertyChanged(nameof(Assembly.TotalPrice)); 
+                    context.LoadOptions = loadOptions;
+                    var assemblies = context.Assemblies.ToList();
 
-                        Assemblies.Add(assembly);
-                    }
-                });
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        Assemblies.Clear();
+                        foreach (var assembly in assemblies)
+                        {
+                            assembly.OnPropertyChanged(nameof(Assembly.TotalPrice));
+                            Assemblies.Add(assembly);
+                        }
+                    });
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Ошибка загрузки сборок: {ex.Message}", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
-                _dbContext.LoadOptions = null; // Сбрасываем LoadOptions
             }
         }
 
@@ -102,8 +95,18 @@ namespace MyApp.WPF
                 return false;
             }
 
-            existingVote = _dbContext.UserVotes
-                .FirstOrDefault(v => v.AssemblyID == assemblyId && v.UserEmail == _currentUserEmail);
+            using (var context = new AppDbContext())
+            {
+                existingVote = context.UserVotes
+                    .FirstOrDefault(v => v.AssemblyID == assemblyId && v.UserEmail == _currentUserEmail);
+            }
+
+            if (App.NameId == 0)
+            {
+                MessageBox.Show("Только зарегистрированные пользователи могут голосовать", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
 
             if (existingVote != null)
             {
@@ -111,6 +114,8 @@ namespace MyApp.WPF
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
+
+
 
             return true;
         }
@@ -121,28 +126,25 @@ namespace MyApp.WPF
             {
                 if (!CanUserVote(assemblyId, out _)) return;
 
-                // Получаем сборку по ID
-                var assembly = _dbContext.Assemblies
-                    .FirstOrDefault(a => a.AssemblyID == assemblyId);
-
-                if (assembly != null)
+                using (var context = new AppDbContext())
                 {
-                    // Увеличиваем рейтинг
-                    assembly.Rating++;
+                    var assembly = context.Assemblies
+                        .FirstOrDefault(a => a.AssemblyID == assemblyId);
 
-                    // Добавляем запись о голосовании
-                    _dbContext.UserVotes.InsertOnSubmit(new UserVote
+                    if (assembly != null)
                     {
-                        AssemblyID = assemblyId,
-                        UserEmail = _currentUserEmail,
-                        VoteType = 1 // 1 для лайка
-                    });
+                        assembly.Rating++;
 
-                    // Сохраняем изменения
-                    _dbContext.SubmitChanges();
+                        context.UserVotes.InsertOnSubmit(new UserVote
+                        {
+                            AssemblyID = assemblyId,
+                            UserEmail = _currentUserEmail,
+                            VoteType = 1
+                        });
 
-                    // Обновляем UI
-                    SaveAndRefresh(assemblyId);
+                        context.SubmitChanges();
+                        RefreshAssembly(assemblyId);
+                    }
                 }
             }
             catch (Exception ex)
@@ -157,26 +159,25 @@ namespace MyApp.WPF
             {
                 if (!CanUserVote(assemblyId, out _)) return;
 
-                // Получаем сборку из базы
-                var assembly = _dbContext.Assemblies
-                    .FirstOrDefault(a => a.AssemblyID == assemblyId);
-
-                if (assembly != null)
+                using (var context = new AppDbContext())
                 {
-                    // Уменьшаем рейтинг
-                    assembly.Rating--;
+                    var assembly = context.Assemblies
+                        .FirstOrDefault(a => a.AssemblyID == assemblyId);
 
-                    // Добавляем голос пользователя
-                    _dbContext.UserVotes.InsertOnSubmit(new UserVote
+                    if (assembly != null)
                     {
-                        AssemblyID = assemblyId,
-                        UserEmail = _currentUserEmail,
-                        VoteType = 0 // 0 для дизлайка
-                    });
+                        assembly.Rating--;
 
-                    // Сохраняем изменения и обновляем данные
-                    _dbContext.SubmitChanges();
-                    SaveAndRefresh(assemblyId);
+                        context.UserVotes.InsertOnSubmit(new UserVote
+                        {
+                            AssemblyID = assemblyId,
+                            UserEmail = _currentUserEmail,
+                            VoteType = 0
+                        });
+
+                        context.SubmitChanges();
+                        RefreshAssembly(assemblyId);
+                    }
                 }
             }
             catch (Exception ex)
@@ -185,17 +186,10 @@ namespace MyApp.WPF
             }
         }
 
-        private void SaveAndRefresh(int assemblyId)
-        {
-            _dbContext.SubmitChanges();
-            RefreshAssembly(assemblyId);
-        }
-
         private void RefreshAssembly(int assemblyId)
         {
             try
             {
-                // Настраиваем загрузку связанных данных
                 var loadOptions = new DataLoadOptions();
                 loadOptions.LoadWith<Assembly>(a => a.User);
                 loadOptions.LoadWith<Assembly>(a => a.AssemblyComponents);
@@ -203,103 +197,116 @@ namespace MyApp.WPF
                 loadOptions.LoadWith<Assembly>(a => a.Reviews);
                 loadOptions.LoadWith<Assembly>(a => a.UserVotes);
 
-                _dbContext.LoadOptions = loadOptions;
-
-                var updatedAssembly = _dbContext.Assemblies
-                    .FirstOrDefault(a => a.AssemblyID == assemblyId);
-
-                if (updatedAssembly != null)
+                using (var context = new AppDbContext())
                 {
-                    Application.Current.Dispatcher.Invoke(() =>
+                    context.LoadOptions = loadOptions;
+                    var updatedAssembly = context.Assemblies
+                        .FirstOrDefault(a => a.AssemblyID == assemblyId);
+
+                    if (updatedAssembly != null)
                     {
-                        var oldAssembly = Assemblies.FirstOrDefault(a => a.AssemblyID == assemblyId);
-                        if (oldAssembly != null)
+                        Application.Current.Dispatcher.Invoke(() =>
                         {
-                            var index = Assemblies.IndexOf(oldAssembly);
-                            Assemblies.RemoveAt(index);
-
-                            // Уведомляем об обновлении TotalPrice
-                            updatedAssembly.OnPropertyChanged(nameof(Assembly.TotalPrice));
-
-                            Assemblies.Insert(index, updatedAssembly);
-                        }
-                    });
-                }
-            }
-            finally
-            {
-                _dbContext.LoadOptions = null;
-            }
-        }
-
-        private void DeleteAssembly(int assemblyId)
-        {
-            var result = MessageBox.Show("Вы уверены, что хотите удалить эту сборку?",
-                "Подтверждение удаления", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result != MessageBoxResult.Yes) return;
-
-            try
-            {
-                // Загружаем сборку с связанными данными
-                var options = new DataLoadOptions();
-                options.LoadWith<Assembly>(a => a.AssemblyComponents);
-                options.LoadWith<Assembly>(a => a.Reviews);
-                options.LoadWith<Assembly>(a => a.UserVotes);
-                _dbContext.LoadOptions = options;
-
-                var assembly = _dbContext.Assemblies
-                    .FirstOrDefault(a => a.AssemblyID == assemblyId);
-
-                if (assembly != null)
-                {
-                    // Удаление связанных данных
-                    _dbContext.AssemblyComponents.DeleteAllOnSubmit(assembly.AssemblyComponents);
-                    _dbContext.Reviews.DeleteAllOnSubmit(assembly.Reviews);
-                    _dbContext.UserVotes.DeleteAllOnSubmit(assembly.UserVotes);
-
-                    // Удаление самой сборки
-                    _dbContext.Assemblies.DeleteOnSubmit(assembly);
-
-                    // Сохранение изменений
-                    _dbContext.SubmitChanges();
-
-                    // Обновление UI
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        var assemblyToRemove = Assemblies.FirstOrDefault(a => a.AssemblyID == assemblyId);
-                        if (assemblyToRemove != null)
-                        {
-                            Assemblies.Remove(assemblyToRemove);
-                        }
-                    });
+                            var oldAssembly = Assemblies.FirstOrDefault(a => a.AssemblyID == assemblyId);
+                            if (oldAssembly != null)
+                            {
+                                var index = Assemblies.IndexOf(oldAssembly);
+                                Assemblies.RemoveAt(index);
+                                updatedAssembly.OnPropertyChanged(nameof(Assembly.TotalPrice));
+                                Assemblies.Insert(index, updatedAssembly);
+                            }
+                        });
+                    }
                 }
             }
             catch (Exception ex)
             {
                 HandleError(ex);
             }
-            finally
+        }
+
+        public void DeleteAssembly(int assemblyId)
+        {
+            try
             {
-                // Сбрасываем LoadOptions
-                _dbContext.LoadOptions = null;
+                using (var context = new AppDbContext())
+                {
+                    // Настройка загрузки связанных данных
+                    var loadOptions = new DataLoadOptions();
+                    loadOptions.LoadWith<Assembly>(a => a.AssemblyComponents);
+                    loadOptions.LoadWith<Assembly>(a => a.Reviews);
+                    loadOptions.LoadWith<Assembly>(a => a.UserVotes);
+                    context.LoadOptions = loadOptions;
+
+                    // Получаем сборку со всеми зависимостями
+                    var assembly = context.Assemblies
+                        .FirstOrDefault(a => a.AssemblyID == assemblyId);
+
+                    if (assembly != null)
+                    {
+                        // Удаляем все компоненты сборки
+                        if (assembly.AssemblyComponents != null && assembly.AssemblyComponents.Any())
+                        {
+                            context.AssemblyComponents.DeleteAllOnSubmit(assembly.AssemblyComponents);
+                            context.SubmitChanges(); // Сохраняем удаление компонентов
+                        }
+
+                        // Удаляем все отзывы
+                        if (assembly.Reviews != null && assembly.Reviews.Any())
+                        {
+                            context.Reviews.DeleteAllOnSubmit(assembly.Reviews);
+                            context.SubmitChanges(); // Сохраняем удаление отзывов
+                        }
+
+                        // Удаляем все голоса
+                        if (assembly.UserVotes != null && assembly.UserVotes.Any())
+                        {
+                            context.UserVotes.DeleteAllOnSubmit(assembly.UserVotes);
+                            context.SubmitChanges(); // Сохраняем удаление голосов
+                        }
+
+                        // Теперь можно удалить саму сборку
+                        context.Assemblies.DeleteOnSubmit(assembly);
+                        context.SubmitChanges();
+
+                        // Обновляем UI
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            var item = Assemblies.FirstOrDefault(a => a.AssemblyID == assemblyId);
+                            if (item != null)
+                                Assemblies.Remove(item);
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка удаления: {ex.Message}", "Ошибка",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         private void ShowReviews(int assemblyId)
         {
             try
             {
-                var assembly = _dbContext.Assemblies
-                    .Include(a => a.Reviews)
-                    .ThenInclude(r => r.User)
-                    .FirstOrDefault(a => a.AssemblyID == assemblyId);
-
-                if (assembly != null)
+                using (var context = new AppDbContext())
                 {
-                    var reviewWindow = new ReviewsWindow(assembly, CurrentUserEmail, _dbContext);
-                    reviewWindow.ShowDialog();
-                    LoadAssemblies();
+                    var loadOptions = new DataLoadOptions();
+                    loadOptions.LoadWith<Assembly>(a => a.Reviews);
+                    loadOptions.LoadWith<Review>(r => r.User);
+                    context.LoadOptions = loadOptions;
+
+                    var assembly = context.Assemblies
+                        .FirstOrDefault(a => a.AssemblyID == assemblyId);
+
+                    if (assembly != null)
+                    {
+                        var reviewWindow = new ReviewsWindow(assembly, CurrentUserEmail, _dbContext);
+                        reviewWindow.ShowDialog();
+                        LoadAssemblies();
+                    }
                 }
             }
             catch (Exception ex)
@@ -320,7 +327,7 @@ namespace MyApp.WPF
             UpdateCollection(sorted);
         }
 
-        private void UpdateCollection(List<Assembly> sortedAssemblies)
+        private void UpdateCollection(System.Collections.Generic.List<Assembly> sortedAssemblies)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {

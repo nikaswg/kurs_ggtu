@@ -55,5 +55,12 @@ namespace MyApp.DataLayer.Models
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        // Свойство для отображения в UI
+        public string DisplayInfo => $"{Name} ({Category?.Name}) - {Price}₽";
     }
+
+
+
+
 }

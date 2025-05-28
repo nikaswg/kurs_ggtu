@@ -7,55 +7,56 @@ using MyApp.DataLayer.Models;
 
 namespace MyApp.BusinessLogic
 {
-    public class ComponentService
+    public class ComponentService : IDisposable
     {
         private readonly AppDbContext _dbContext;
+        private bool _disposed = false;
 
         public ComponentService()
         {
             _dbContext = new AppDbContext();
+            ConfigureLoadOptions();
         }
 
-        public List<Component> GetAllComponents()
+        private void ConfigureLoadOptions()
         {
             var loadOptions = new DataLoadOptions();
             loadOptions.LoadWith<Component>(c => c.Category);
             _dbContext.LoadOptions = loadOptions;
+        }
 
+        public List<Component> GetAllComponents()
+        {
+            CheckDisposed();
             return _dbContext.Components.ToList();
         }
 
         public PagedResult<Component> GetComponentsPaged(int pageNumber, int pageSize)
         {
-            using (var dbContext = new AppDbContext())
+            CheckDisposed();
+
+            var query = _dbContext.Components;
+            var totalCount = query.Count();
+
+            var components = query
+                .OrderBy(c => c.ComponentID)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return new PagedResult<Component>
             {
-                var loadOptions = new DataLoadOptions();
-                loadOptions.LoadWith<Component>(c => c.Category);
-                dbContext.LoadOptions = loadOptions;
-
-                var query = dbContext.Components;
-                var totalCount = query.Count();
-
-                var components = query
-                    .Skip((pageNumber - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToList();
-
-                return new PagedResult<Component>
-                {
-                    Results = components,
-                    TotalCount = totalCount,
-                    PageNumber = pageNumber,
-                    PageSize = pageSize
-                };
-            }
+                Results = components,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
 
-        public List<Component> SearchComponents(string searchText = null, decimal? minPrice = null, decimal? maxPrice = null, bool exactMatch = false)
+        public List<Component> SearchComponents(string searchText = null, decimal? minPrice = null,
+                                              decimal? maxPrice = null, bool exactMatch = false)
         {
-            var loadOptions = new DataLoadOptions();
-            loadOptions.LoadWith<Component>(c => c.Category);
-            _dbContext.LoadOptions = loadOptions;
+            CheckDisposed();
 
             var query = _dbContext.Components.AsQueryable();
 
@@ -77,9 +78,7 @@ namespace MyApp.BusinessLogic
 
         public List<Component> SearchByName(string name, bool exactMatch = false)
         {
-            var loadOptions = new DataLoadOptions();
-            loadOptions.LoadWith<Component>(c => c.Category);
-            _dbContext.LoadOptions = loadOptions;
+            CheckDisposed();
 
             var query = _dbContext.Components.AsQueryable();
 
@@ -95,9 +94,7 @@ namespace MyApp.BusinessLogic
 
         public List<Component> FilterByPrice(decimal? minPrice, decimal? maxPrice)
         {
-            var loadOptions = new DataLoadOptions();
-            loadOptions.LoadWith<Component>(c => c.Category);
-            _dbContext.LoadOptions = loadOptions;
+            CheckDisposed();
 
             var query = _dbContext.Components.AsQueryable();
 
@@ -112,6 +109,9 @@ namespace MyApp.BusinessLogic
 
         public List<Component> SortComponents(List<Component> components, string sortField, ref int sortDirection)
         {
+            if (components == null)
+                return new List<Component>();
+
             switch (sortField)
             {
                 case "Name":
@@ -142,8 +142,10 @@ namespace MyApp.BusinessLogic
 
         public void AddComponent(Component component, string currentUserRole)
         {
+            CheckDisposed();
+
             if (currentUserRole != "Admin")
-                throw new UnauthorizedAccessException("Only admins can add components");
+                throw new UnauthorizedAccessException("Только администраторы могут добавлять компоненты");
 
             _dbContext.Components.InsertOnSubmit(component);
             _dbContext.SubmitChanges();
@@ -151,8 +153,10 @@ namespace MyApp.BusinessLogic
 
         public void AddSimpleComponent(string name, string description, decimal price, string currentUserRole)
         {
+            CheckDisposed();
+
             if (currentUserRole != "Admin")
-                throw new UnauthorizedAccessException("Only admins can add components");
+                throw new UnauthorizedAccessException("Только администраторы могут добавлять компоненты");
 
             var component = new Component
             {
@@ -168,6 +172,8 @@ namespace MyApp.BusinessLogic
 
         public void UpdateComponent(Component component)
         {
+            CheckDisposed();
+
             var existingComponent = _dbContext.Components
                 .FirstOrDefault(c => c.ComponentID == component.ComponentID);
 
@@ -178,6 +184,30 @@ namespace MyApp.BusinessLogic
                 existingComponent.Price = component.Price;
                 existingComponent.CategoryID = component.CategoryID;
                 _dbContext.SubmitChanges();
+            }
+        }
+
+        private void CheckDisposed()
+        {
+            if (_disposed)
+                throw new ObjectDisposedException("ComponentService", "Сервис был удален");
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _dbContext?.Dispose();
+                }
+                _disposed = true;
             }
         }
 

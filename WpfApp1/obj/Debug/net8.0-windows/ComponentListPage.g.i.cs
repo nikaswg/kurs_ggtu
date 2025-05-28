@@ -53,7 +53,7 @@ namespace MyApp.WPF {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/WpfApp1;component/componentlistpage.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/WpfApp1;V1.0.0.0;component/componentlistpage.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\ComponentListPage.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

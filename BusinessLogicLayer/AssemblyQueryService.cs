@@ -1,31 +1,44 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using System.Data.Linq;
+using System.Linq;
 using MyApp.DataLayer;
 using MyApp.DataLayer.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace MyApp.BusinessLogic
 {
     public class AssemblyQueryService
     {
-        private readonly AppDbContext _dbContext;
+        private readonly string _connectionString;
 
         public AssemblyQueryService(AppDbContext dbContext)
         {
-            _dbContext = dbContext;
+            _connectionString = dbContext.Connection.ConnectionString;
         }
 
         /// <summary>
-        /// Получить все сборки.
+        /// Получить все сборки с деталями (LINQ to SQL версия)
         /// </summary>
-        public async Task<List<Assembly>> GetAllAssembliesWithDetailsAsync()
+        public List<Assembly> GetAllAssembliesWithDetails()
         {
-            return await _dbContext.Assemblies
-                .AsNoTracking()
-                .Include(a => a.AssemblyComponents)
-                    .ThenInclude(ac => ac.Component)
-                .Include(a => a.User) // Если нужно отображать пользователя
-                .ToListAsync();
+            using (var context = new AppDbContext())
+            {
+                var loadOptions = new DataLoadOptions();
+                loadOptions.LoadWith<Assembly>(a => a.AssemblyComponents);
+                loadOptions.LoadWith<AssemblyComponent>(ac => ac.Component);
+                loadOptions.LoadWith<Assembly>(a => a.User);
+
+                context.LoadOptions = loadOptions;
+
+                return context.Assemblies.ToList();
+            }
+        }
+
+        /// <summary>
+        /// Асинхронная версия (использует Task.Run)
+        /// </summary>
+        public Task<List<Assembly>> GetAllAssembliesWithDetailsAsync()
+        {
+            return Task.Run(() => GetAllAssembliesWithDetails());
         }
     }
 }

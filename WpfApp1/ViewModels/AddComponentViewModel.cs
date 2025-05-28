@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Windows;
 using System.Windows.Input;
-using Microsoft.EntityFrameworkCore;
 using MyApp.BusinessLogic;
 using MyApp.DataLayer;
 using MyApp.DataLayer.Models;
@@ -40,14 +42,55 @@ namespace MyApp.WPF
 
         private void LoadCategories()
         {
-            Categories = _dbContext.Categories.AsNoTracking().ToList();
-            OnPropertyChanged(nameof(Categories));
+            try
+            {
+                Categories = _dbContext.Categories.ToList();
+                OnPropertyChanged(nameof(Categories));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки категорий: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void AddComponent()
         {
-            _componentService.AddComponent(NewComponent, App.Role);
-            NewComponent = new Component(); // Сброс формы после добавления
+            try
+            {
+                // Валидация данных
+                if (string.IsNullOrWhiteSpace(NewComponent.Name))
+                    throw new ArgumentException("Название компонента не может быть пустым");
+
+                if (string.IsNullOrWhiteSpace(NewComponent.Description))
+                    throw new ArgumentException("Описание компонента не может быть пустым");
+
+                if (NewComponent.Price <= 0)
+                    throw new ArgumentException("Цена должна быть больше 0");
+
+                if (NewComponent.CategoryID <= 0)
+                    throw new ArgumentException("Необходимо выбрать категорию");
+
+                // Добавление компонента
+                _dbContext.Components.InsertOnSubmit(NewComponent);
+                _dbContext.SubmitChanges();
+
+                // Сброс формы
+                NewComponent = new Component();
+
+                MessageBox.Show("Компонент успешно добавлен!", "Успех",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка ввода",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при добавлении компонента: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

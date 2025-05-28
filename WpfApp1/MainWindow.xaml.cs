@@ -34,6 +34,7 @@ namespace MyApp
                 App.Name = "-";
                 App.Email = "-";
                 App.Role = "Guest";
+                App.NameId = 0;
             }
             UpdateUserInfo();
         }

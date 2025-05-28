@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
 using MyApp.DataLayer;
 using MyApp.DataLayer.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using System.Linq;
 
 namespace MyApp.BusinessLogic
@@ -99,9 +100,14 @@ namespace MyApp.BusinessLogic
 
         public List<Assembly> GetUserAssemblies(int userId)
         {
+            // Для LINQ to SQL используем DataLoadOptions для загрузки связанных данных
+            var loadOptions = new DataLoadOptions();
+            loadOptions.LoadWith<Assembly>(a => a.AssemblyComponents);
+            loadOptions.LoadWith<AssemblyComponent>(ac => ac.Component);
+
+            _dbContext.LoadOptions = loadOptions;
+
             return _dbContext.Assemblies
-                .Include(a => a.AssemblyComponents)
-                .ThenInclude(ac => ac.Component)
                 .Where(a => a.NameId == userId)
                 .ToList();
         }

@@ -1,4 +1,5 @@
 ﻿using MyApp.BusinessLogic;
+using MyApp.DataLayer;
 using MyApp.DataLayer.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -12,32 +13,18 @@ namespace MyApp.WPF
 {
     public class AssemblyBuilderViewModel : INotifyPropertyChanged
     {
-        private readonly ComponentService _componentService;
-        private readonly AssemblyService _assemblyService;
-
-        public ObservableCollection<Component> AvailableComponents { get; set; }
-        public ObservableCollection<Component> SelectedComponents { get; set; }
-
-        private string _description;
-        public string Description
-        {
-            get => _description;
-            set { _description = value; OnPropertyChanged(nameof(Description)); }
-        }
-
-        public ICommand AddComponentCommand { get; }
-        public ICommand RemoveComponentCommand { get; }
-        public ICommand SaveAssemblyCommand { get; }
+        public ObservableCollection<Component> AvailableComponents { get; }
+        public ObservableCollection<Component> SelectedComponents { get; }
 
         private Component _selectedAvailable;
         public Component SelectedAvailable
         {
             get => _selectedAvailable;
-            set 
-            { 
-                _selectedAvailable = value; 
+            set
+            {
+                _selectedAvailable = value;
                 OnPropertyChanged(nameof(SelectedAvailable));
-                ((RelayCommand)AddComponentCommand).RaiseCanExecuteChanged();
+                CommandManager.InvalidateRequerySuggested();
             }
         }
 
@@ -45,108 +32,211 @@ namespace MyApp.WPF
         public Component SelectedInBuild
         {
             get => _selectedInBuild;
-            set { _selectedInBuild = value; OnPropertyChanged(nameof(SelectedInBuild)); }
+            set
+            {
+                _selectedInBuild = value;
+                OnPropertyChanged(nameof(SelectedInBuild));
+                CommandManager.InvalidateRequerySuggested();
+            }
         }
+
+        private string _description;
+        public string Description
+        {
+            get => _description;
+            set
+            {
+                _description = value;
+                OnPropertyChanged(nameof(Description));
+                CommandManager.InvalidateRequerySuggested();
+            }
+        }
+
+        public ICommand AddComponentCommand { get; }
+        public ICommand RemoveComponentCommand { get; }
+        public ICommand SaveAssemblyCommand { get; }
 
         public AssemblyBuilderViewModel()
         {
-            _componentService = new ComponentService();
-            _assemblyService = new AssemblyService();
-
-            AvailableComponents = new ObservableCollection<Component>(_componentService.GetAllComponents());
+            var service = new ComponentService();
+            AvailableComponents = new ObservableCollection<Component>(service.GetAllComponents());
             SelectedComponents = new ObservableCollection<Component>();
 
-            AddComponentCommand = new RelayCommand(AddComponent, CanAddComponent);
-            RemoveComponentCommand = new RelayCommand(RemoveComponent);
-            SaveAssemblyCommand = new RelayCommand(SaveAssembly);
+            AddComponentCommand = new ORelayCommand(
+                () =>
+                {
+                    if (SelectedAvailable != null)
+                    {
+                        var category = SelectedAvailable.Category?.Name;
+                        var currentCount = SelectedComponents.Count(c => c.Category?.Name == category);
+
+                        if (CanAddComponent(category, currentCount))
+                        {
+                            SelectedComponents.Add(SelectedAvailable);
+                            AvailableComponents.Remove(SelectedAvailable);
+                        }
+                        else
+                        {
+                            ShowLimitMessage(category);
+                        }
+                    }
+                },
+                () => SelectedAvailable != null && CanAddComponent(SelectedAvailable.Category?.Name,
+                      SelectedComponents.Count(c => c.Category?.Name == SelectedAvailable.Category?.Name))
+            );
+
+            RemoveComponentCommand = new ORelayCommand(
+                () =>
+                {
+                    if (SelectedInBuild != null)
+                    {
+                        AvailableComponents.Add(SelectedInBuild);
+                        SelectedComponents.Remove(SelectedInBuild);
+                    }
+                },
+                () => SelectedInBuild != null
+            );
+
+            SaveAssemblyCommand = new ORelayCommand(
+                () =>
+                {
+                    if (string.IsNullOrWhiteSpace(Description))
+                    {
+                        MessageBox.Show("Введите описание сборки", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
+                    if (!SelectedComponents.Any())
+                    {
+                        MessageBox.Show("Добавьте хотя бы один компонент", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
+                    if (!ValidateRequiredComponents())
+                    {
+                        return;
+                    }
+
+                    try
+                    {
+                        using (var context = new AppDbContext())
+                        {
+                            // Создаем новую сборку
+                            var assembly = new Assembly
+                            {
+                                Description = Description,
+                                NameId = App.NameId, // Предполагается, что у вас есть текущий пользователь
+                                Rating = 0,
+                                User = context.Users.FirstOrDefault(u => u.NameId == App.NameId)
+                            };
+
+                            // Добавляем сборку в контекст
+                            context.Assemblies.InsertOnSubmit(assembly);
+                            context.SubmitChanges(); // Сохраняем, чтобы получить AssemblyID
+
+                            // Добавляем компоненты в сборку
+                            foreach (var component in SelectedComponents)
+                            {
+                                var assemblyComponent = new AssemblyComponent
+                                {
+                                    AssemblyID = assembly.AssemblyID,
+                                    ComponentID = component.ComponentID
+                                };
+                                context.AssemblyComponents.InsertOnSubmit(assemblyComponent);
+                            }
+
+                            context.SubmitChanges(); // Сохраняем связи с компонентами
+
+                            MessageBox.Show("Сборка сохранена успешно!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                            // Очищаем форму после сохранения
+                            SelectedComponents.Clear();
+                            Description = string.Empty;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Ошибка при сохранении сборки: {ex.Message}", "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                },
+                () => !string.IsNullOrWhiteSpace(Description) && SelectedComponents.Any()
+            );
         }
 
-        private bool CanAddComponent()
+        private bool CanAddComponent(string category, int currentCount)
         {
-            if (SelectedAvailable == null) return false;
-
-            var componentType = SelectedAvailable.Category?.Name;
-            var selectedCountOfType = SelectedComponents.Count(c => c.Category?.Name == componentType);
-
-            // Определяем максимальное количество для каждого типа
-            int maxCount = componentType switch
+            return category switch
             {
-                "Процессор" => 1,
-                "Материнская плата" => 1,
-                "Блок питания" => 1,
-                "Корпус" => 1,
-                "Видеокарта" => 2,
-                "Оперативная память" => 2,
-                "SSD" or "HDD" => 3,
-                "Охлаждение" => 1,
-                _ => int.MaxValue // Для других типов без ограничений
+                "Процессор" => currentCount < 1,
+                "Материнская плата" => currentCount < 1,
+                "Блок питания" => currentCount < 1,
+                "Корпус" => currentCount < 1,
+                "Видеокарта" => currentCount < 2,
+                "Оперативная память" => currentCount < 2,
+                "SSD" or "HDD" => currentCount < 2,
+                _ => true // Для других типов без ограничений
+            };
+        }
+
+        private void ShowLimitMessage(string category)
+        {
+            string message = category switch
+            {
+                "Процессор" => "Можно добавить только 1 процессор",
+                "Материнская плата" => "Можно добавить только 1 материнскую плату",
+                "Блок питания" => "Можно добавить только 1 блок питания",
+                "Корпус" => "Можно добавить только 1 корпус",
+                "Видеокарта" => "Можно добавить максимум 2 видеокарты",
+                "Оперативная память" => "Можно добавить максимум 2 модуля памяти",
+                "SSD" or "HDD" => "Можно добавить максимум 2 накопителя",
+                _ => "Достигнуто максимальное количество для этого типа компонента"
             };
 
-            return selectedCountOfType < maxCount;
+            MessageBox.Show(message, "Ограничение", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
-        private void AddComponent()
+        private bool ValidateRequiredComponents()
         {
-            if (SelectedAvailable != null)
-            {
-                // Просто добавляем компонент, даже если такой уже есть
-                SelectedComponents.Add(SelectedAvailable);
-                (AddComponentCommand as RelayCommand)?.RaiseCanExecuteChanged();
-            }
-        }
+            var required = new[] { "Процессор", "Материнская плата", "Блок питания", "Корпус" };
+            var missing = required.Except(
+                SelectedComponents.Select(c => c.Category?.Name).Distinct()).ToList();
 
-
-        private void RemoveComponent()
-        {
-            if (SelectedInBuild != null)
+            if (missing.Any())
             {
-                SelectedComponents.Remove(SelectedInBuild);
-                ((RelayCommand)AddComponentCommand).RaiseCanExecuteChanged();
-            }
-        }
-
-        private void SaveAssembly()
-        {
-            if (string.IsNullOrWhiteSpace(Description))
-            {
-                MessageBox.Show("Введите описание сборки.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
+                MessageBox.Show($"Отсутствуют обязательные компоненты:\n{string.Join("\n", missing)}",
+                    "Неполная сборка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
             }
 
-            if (SelectedComponents.Count == 0)
-            {
-                MessageBox.Show("Добавьте хотя бы один компонент.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            // Проверка обязательных компонентов
-            var requiredComponents = new[] { "Процессор", "Материнская плата", "Блок питания", "Корпус" };
-            var missingComponents = requiredComponents
-                .Where(rc => !SelectedComponents.Any(c => c.Category?.Name == rc))
-                .ToList();
-
-            if (missingComponents.Any())
-            {
-                MessageBox.Show($"Отсутствуют обязательные компоненты: {string.Join(", ", missingComponents)}", 
-                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (_assemblyService.CreateAssembly(Description, SelectedComponents.Select(c => c.ComponentID).ToList(), App.NameId, out string errorMessage))
-            {
-                MessageBox.Show("Сборка сохранена успешно!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                Description = "";
-                SelectedComponents.Clear();
-                OnPropertyChanged(nameof(Description));
-            }
-            else
-            {
-                MessageBox.Show(errorMessage, "Ошибка сохранения", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            return true;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propName) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    public class ORelayCommand : ICommand
+    {
+        private readonly Action _execute;
+        private readonly Func<bool> _canExecute;
+
+        public event EventHandler CanExecuteChanged
+        {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
+
+        public ORelayCommand(Action execute, Func<bool> canExecute = null)
+        {
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            _canExecute = canExecute;
+        }
+
+        public bool CanExecute(object parameter) => _canExecute?.Invoke() ?? true;
+        public void Execute(object parameter) => _execute();
     }
 }
